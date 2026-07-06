@@ -5,42 +5,49 @@
         </h2>
     </x-slot>
 
-<h1>All comptes</h1>
-@foreach($comptes as $compte)
-        <a href="/comptes/{{$compte->id}}">
-            <div style="border:1px solid black; margin:10px; padding:10px;">
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900 dark:text-gray-100">
 
-                <h3>{{ $compte->nom }}</h3>
+                    <div class="space-y-4">
 
-                <p>
-                    <strong>Description :</strong>
-                    {{ $compte->description }}
-                </p>
+                        @foreach($comptes as $compte)
+                                <a href="/comptes/{{$compte->id}}">
 
-                <p>
-                    <strong>Taux de rémunération :</strong>
-                    {{ $compte->taux_remuneration }} %
-                </p>
+                                        <h3>{{ $compte->nom }}</h3>
 
-                <p>
-                    <strong>Taux d'imposition :</strong>
-                    {{ $compte->taux_imposition }} %
-                </p>
+                                        <p>
+                                            <strong>Description :</strong>
+                                            {{ $compte->description }}
+                                        </p>
 
-                <form action='comptes/{{$compte->id}}' method="POST">
-                    @csrf
-                    @method('DELETE')
+                                        <p>
+                                            <strong>Taux de rémunération :</strong>
+                                            {{ $compte->taux_remuneration }} %
+                                        </p>
 
-                    <button type="submit" onclick="return confirm('Voulez-cous supprimez ce compte ?')">
-                        Supprimer
-                    </button>
-                </form>
+                                        <p>
+                                            <strong>Taux d'imposition :</strong>
+                                            {{ $compte->taux_imposition }} %
+                                        </p>
 
+                                <form action='comptes/{{$compte->id}}' method="POST">
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button type="submit" onclick="return confirm('Voulez-cous supprimez ce compte ?')">
+                                        Supprimer
+                                    </button>
+                                </form>
+                            </a>
+
+                        @endforeach 
+                        <br>
+                        <br>
+                        <a href="/comptes/create">Ajouter un compte</a>
+                </div>
             </div>
-</a>
-
-        @endforeach
- <br>
- <br>
- <a href="/comptes/create">Ajouter un compte</a>
+        </div>
+    </div>
 </x-app-layout>

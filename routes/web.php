@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CompteController;
+use App\Http\Controllers\RevenuController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -24,6 +25,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/comptes/update/{id}', [CompteController::class, 'edit']);
     Route::put('/comptes/{id}', [CompteController::class, 'update']);
     Route::delete('/comptes/{id}', [CompteController::class, 'destroy']);
+
+    Route::get('/revenus', [RevenuController::class, 'index'])->name('revenus');
+    Route::get('/revenus/create', [RevenuController::class, 'create']);
+    Route::post('/revenus', [RevenuController::class, 'store']);
+    Route::get('/revenus/{id}', [RevenuController::class, 'show']);
+    Route::get('/revenus/update/{id}', [RevenuController::class, 'edit']);
+    Route::put('/revenus/{id}', [RevenuController::class, 'update']);
+    Route::delete('/revenus/{id}', [RevenuController::class, 'destroy'])->name('revenus.destroy');
+
 });
 
 require __DIR__.'/auth.php';
