@@ -26,12 +26,9 @@
                                     <strong>Date de début</strong>
                                     <p>{{ $depenses->date_debut }}</p>
                                             
-                                @else 
-                                    <strong>Fréquence</strong>
-                                    <p>Tout les {{ $depenses->frequence }} mois</p>
-                                        
+                                @else                                        
                                     <strong>Durée</strong>
-                                    <p>{{ $depenses->duree }}</p>
+                                    <p>Tout les {{ $depenses->duree }} mois</p>
 
                                     <strong>Montant</strong>
                                     <p>{{ $depenses->montant }}</p>
@@ -43,12 +40,12 @@
                                     <p>{{ $depenses->date_fin }}</p>
                                 @endif
                                 <br>                           
-                                <form method="POST" action="{{ route('depenses.destroy', $depenses->id) }}">
+                                <form method="POST" action="{{ route('depenses.destroy', $depenses->id, $depenses->compte_id) }}">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit">Supprimer la salle</button>
+                                    <button type="submit">Supprimer ma depense</button>
                                 </form>
-                                <a href="{{ route('depenses.edit', $depenses->id) }}">Modifier mon depense</a>
+                                <a href="{{ route('depenses.edit', $depenses->id, $depenses->compte_id) }}">Modifier mon depense</a>
                             </div>
                         </div>
 

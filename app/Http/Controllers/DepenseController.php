@@ -10,37 +10,36 @@ class DepenseController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(string $compteId)
     {
-        $depenses = depense::all();
-         return view('depenses/index', ['depenses' => $depenses]);
+        $depenses = depense::select('*')->where('compte_id', $compteId)->get();
+         return view('depenses.index', ['depenses' => $depenses, 'compteId' => $compteId]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(string $compteId)
     {
-        return view('depenses/create');
+        return view('depenses.create', ['compteId' => $compteId]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, string $compteId)
     {
         Depense::create([
             'nom' => $request->nom,
             'description' => $request->description ?? '',
             'montant' => $request->montant,
             'date_debut' => $request->date_debut,
-            'ponctuel' => $request->ponctuel ?? false,
-            'frequence' => $request->frequence ?? null,
+            'frequence' => $request->frequence ?? false,
             'date_fin' => $request->date_fin ?? $request->date_debut,
             'duree' => $request->duree,
-            'compte_id' => 1,
+            'compte_id' => $compteId,
         ]);
-        return redirect('/depenses');
+        return redirect()->route('depenses.index', ['compteId' => $compteId]);
     }
 
     /**
@@ -49,7 +48,7 @@ class DepenseController extends Controller
     public function show(string $id)
     {
         $depenses=Depense::findOrFail($id);
-        return view('depenses/show', ['depenses'=> $depenses]);
+        return view('depenses.show', ['depenses'=> $depenses]);
     }
 
     /**
@@ -73,13 +72,12 @@ class DepenseController extends Controller
             'description' => $request->description ?? $depense->description,
             'montant' => $request->montant ?? $depense->montant,
             'date_debut' => $request->date_debut ?? $depense->date_debut,
-            'ponctuel' => $request->ponctuel ?? $depense->ponctuel,
             'frequence' => $request->frequence ?? $depense->frequence,
             'date_fin' => $request->date_fin ?? $depense->date_debut,
             'duree' => $request->duree ?? $depense->duree,
-            'compte_id' => 1,
+            'compte_id' => $request->compte_id ?? $depense->compte_id,
         ]);
-        return redirect('/depenses');
+        return redirect()->route('depenses.index', ['compteId' => $depense->compte_id]);
     }
 
     /**
@@ -91,6 +89,6 @@ class DepenseController extends Controller
         $delete = Depense::findOrFail($id);
         $delete->deleteOrFail($id);
 
-        return redirect('/depenses');
+        return redirect()->route('depenses.index', ['compteId' => $delete->compte_id]);
     }
 }

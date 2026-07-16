@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CompteController;
 use App\Http\Controllers\RevenuController;
+use App\Http\Controllers\DepenseController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -26,14 +27,22 @@ Route::middleware('auth')->group(function () {
     Route::put('/comptes/{id}', [CompteController::class, 'update']);
     Route::delete('/comptes/{id}', [CompteController::class, 'destroy']);
 
-    Route::get('/revenus', [RevenuController::class, 'index'])->name('revenus');
-    Route::get('/revenus/create', [RevenuController::class, 'create']);
-    Route::post('/revenus', [RevenuController::class, 'store']);
-    Route::get('/revenus/{id}', [RevenuController::class, 'show']);
-    Route::get('/revenus/update/{id}', [RevenuController::class, 'edit']);
-    Route::put('/revenus/{id}', [RevenuController::class, 'update']);
-    Route::delete('/revenus/{id}', [RevenuController::class, 'destroy'])->name('revenus.destroy');
+    Route::get('/compte/{compteId}/revenus', [RevenuController::class, 'index'])->name('revenus.index');
+    Route::get('/compte/{compteId}/revenus/create', [RevenuController::class, 'create'])->name('revenus.create');
+    Route::post('/compte/{compteId}/revenus', [RevenuController::class, 'store'])->name('revenus.store');
+    Route::get('/compte/revenus/{id}', [RevenuController::class, 'show'])->name('revenus.show');
+    Route::get('/compte/revenus/update/{id}', [RevenuController::class, 'edit'])->name('revenus.edit');
+    Route::put('/compte/revenus/{id}', [RevenuController::class, 'update'])->name('revenus.update');
+    Route::delete('/compte/revenus/{id}', [RevenuController::class, 'destroy'])->name('revenus.destroy');
 
+    
+    Route::get('/compte/{compteId}/depenses', [DepenseController::class, 'index'])->name('depenses.index');
+    Route::get('/compte/{compteId}/depenses/create', [DepenseController::class, 'create'])->name('depenses.create');
+    Route::post('/compte/{compteId}/depenses', [DepenseController::class, 'store'])->name('depenses.store');
+    Route::get('/compte/depenses/{id}', [DepenseController::class, 'show'])->name('depenses.show');
+    Route::get('/compte/depenses/update/{id}', [DepenseController::class, 'edit'])->name('depenses.edit');
+    Route::put('/compte/depenses/{id}', [DepenseController::class, 'update'])->name('depenses.update');
+    Route::delete('/compte/depenses/{id}', [DepenseController::class, 'destroy'])->name('depenses.destroy');
 });
 
 require __DIR__.'/auth.php';
