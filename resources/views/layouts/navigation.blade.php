@@ -18,14 +18,6 @@
                     <x-nav-link :href="route('compte')" :active="request()->routeIs('compte')">
                         {{ __('Compte') }}
                     </x-nav-link>
-                    
-                    <x-nav-link :href="route('revenus')" :active="request()->routeIs('revenus')">
-                        {{ __('Revenu') }}
-                    </x-nav-link>
-                    
-                    <x-nav-link :href="route('depenses.index')" :active="request()->routeIs('depenses.index')">
-                        {{ __('Depense') }}
-                    </x-nav-link>
                 </div>
             </div>
 

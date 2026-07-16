@@ -13,39 +13,48 @@
                     <div class="space-y-4">
 
                         @foreach($comptes as $compte)
+                            <div class="grid grid-cols-3 gap-4">                        
                                 <a href="/comptes/{{$compte->id}}">
+                                    <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded">
+
 
                                         <h3>{{ $compte->nom }}</h3>
+                                        @if ($compte->description)
+                                            <p>
+                                                <strong>Description :</strong>
+                                                {{ $compte->description }}
+                                            </p>
+                                        @endif
 
-                                        <p>
-                                            <strong>Description :</strong>
-                                            {{ $compte->description }}
-                                        </p>
+                                        <form action='comptes/{{$compte->id}}' method="POST">
+                                            @csrf
+                                            @method('DELETE')
 
-                                        <p>
-                                            <strong>Taux de rémunération :</strong>
-                                            {{ $compte->taux_remuneration }} %
-                                        </p>
-
-                                        <p>
-                                            <strong>Taux d'imposition :</strong>
-                                            {{ $compte->taux_imposition }} %
-                                        </p>
-
-                                <form action='comptes/{{$compte->id}}' method="POST">
-                                    @csrf
-                                    @method('DELETE')
-
-                                    <button type="submit" onclick="return confirm('Voulez-cous supprimez ce compte ?')">
-                                        Supprimer
-                                    </button>
-                                </form>
-                            </a>
-
+                                            <button type="submit" onclick="return confirm('Voulez-cous supprimez ce compte ?')">
+                                                Supprimer
+                                            </button>
+                                        </form>
+                                        <a href="{{ route('revenus.index', $compte->id) }}" class="px-4 py-2 bg-blue-500 text-white rounded">
+                                            Voir les revenus
+                                        </a>
+                                        <a href="{{ route('revenus.create', $compte->id) }}" class="px-4 py-2 bg-blue-500 text-white rounded">
+                                            Ajouter un revenu
+                                        </a>
+                                        <a href="{{ route('depenses.index', $compte->id) }}" class="px-4 py-2 bg-blue-500 text-white rounded">
+                                            Voir les dépenses
+                                        </a>
+                                        <a href="{{ route('depenses.create', $compte->id) }}" class="px-4 py-2 bg-blue-500 text-white rounded">
+                                            Ajouter une dépense
+                                        </a>
+                                    </div>
+                                </a>
+                            </div>
                         @endforeach 
-                        <br>
-                        <br>
-                        <a href="/comptes/create">Ajouter un compte</a>
+                    </div>
+                    <br>
+                    <br>
+                    <a href="/comptes/create">Ajouter un compte</a>
+                
                 </div>
             </div>
         </div>
