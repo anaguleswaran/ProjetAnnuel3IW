@@ -18,6 +18,7 @@
                     <x-nav-link :href="route('compte')" :active="request()->routeIs('compte')">
                         {{ __('Compte') }}
                     </x-nav-link>
+                    
                 </div>
             </div>
 

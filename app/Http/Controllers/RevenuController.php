@@ -7,36 +7,35 @@ use App\Models\Revenu;
 
 class RevenuController extends Controller
 {
-    public function index() {
-        $revenus = Revenu::all();
-         return view('revenus/index', ['revenus' => $revenus]);
+    public function index(string $compteId) {
+        $revenus = Revenu::select('*')->where('compte_id', $compteId)->get();
+         return view('revenus.index', ['revenus' => $revenus, 'compteId' => $compteId]);
     }
 
-    public function show($id) {
+    public function show(string $id) {
         $revenus=Revenu::findOrFail($id);
-        return view('revenus/show', ['revenus'=> $revenus]);
+        return view('revenus.show', ['revenus'=> $revenus]);
     }
 
-    public function store(Request $request) {
+    public function store(Request $request, string $compteId) {
         Revenu::create([
             'nom' => $request->nom,
             'description' => $request->description ?? '',
             'montant' => $request->montant,
             'date_debut' => $request->date_debut,
-            'ponctuel' => $request->ponctuel ?? false,
-            'frequence' => $request->frequence ?? null,
+            'frequence' => $request->frequence ?? false,
             'date_fin' => $request->date_fin ?? $request->date_debut,
             'duree' => $request->duree,
-            'compte_id' => 1,
+            'compte_id' => $compteId,
         ]);
-        return redirect('/revenus');
+        return redirect()->route('revenus.index', ['compteId' => $compteId]);
     }
 
-    public function create() {
-        return view('revenus/create');
+    public function create(string $compteId) {
+        return view('revenus.create', ['compteId' => $compteId]);
     }
 
-    public function update(Request $request, $id) {
+    public function update(Request $request, string $id) {
         $revenu = Revenu::findOrFail($id);
 
         $revenu->update([
@@ -44,24 +43,23 @@ class RevenuController extends Controller
             'description' => $request->description ?? $revenu->description,
             'montant' => $request->montant ?? $revenu->montant,
             'date_debut' => $request->date_debut ?? $revenu->date_debut,
-            'ponctuel' => $rsquest->ponctuel ?? $revenu->ponctuel,
             'frequence' => $request->frequence ?? $revenu->frequence,
             'date_fin' => $request->date_fin ?? $revenu->date_debut,
             'duree' => $request->duree ?? $revenu->duree,
-            'compte_id' => 1,
+            'compte_id' => $request->compte_id ?? $revenu->compte_id,
         ]);
-        return redirect('/revenus');
+        return redirect()->route('revenus.index', ['compteId' => $revenu->compte_id]);
     }
 
-    public function edit($id) {
+    public function edit(string $id) {
         $revenu = Revenu::findOrFail($id);
         return view('revenus.edit', ['revenus' => $revenu]);
     }
 
-    public function destroy($id) {
+    public function destroy(string $id) {
         $delete = Revenu::findOrFail($id);
         $delete->deleteOrFail($id);
 
-        return redirect('/revenus');
+        return redirect()->route('revenus.index', ['compteId' => $delete->compte_id]);
     }
 }

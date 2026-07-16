@@ -26,12 +26,9 @@
                                     <strong>Date de début</strong>
                                     <p>{{ $revenus->montant }}</p>
                                             
-                                @else 
-                                    <strong>Fréquence</strong>
-                                    <p>Tout les {{ $revenus->frequence }} mois</p>
-                                        
+                                @else
                                     <strong>Durée</strong>
-                                    <p>{{ $revenus->duree }}</p>
+                                    <p>Tout les {{ $revenus->duree }} mois</p>
 
                                     <strong>Montant</strong>
                                     <p>{{ $revenus->montant }}</p>
@@ -43,7 +40,7 @@
                                     <p>{{ $revenus->date_fin }}</p>
                                 @endif
                                 <br>                           
-                                <form method="POST" action="{{ route('revenus.destroy', $revenus->id) }}">
+                                <form method="POST" action="{{ route('revenus.destroy', $revenus->id, $revenus->compte_id) }}">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit">Supprimer la salle</button>

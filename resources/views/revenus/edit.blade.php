@@ -33,14 +33,12 @@
                         <div>
                             <label class="block mb-2">Type de revenu</label>
                             <label class="mr-6">
-                                <input type="radio" name="ponctuel" value="1"
-                                    {{ $revenus->ponctuel == 1 ? 'checked' : '' }}>
+                                <input type="radio" name="frequence" value="1" {{ $revenus->frequence == 0 ? 'checked' : '' }}>
                                 Ponctuel
                             </label>
 
                             <label>
-                                <input type="radio" name="ponctuel" value="0"
-                                    {{ $revenus->ponctuel == 0 ? 'checked' : '' }}>
+                                <input type="radio" name="frequence" value="0" {{ $revenus->frequence == 1 ? 'checked' : '' }}>
                                 Récurrent
                             </label>
                         </div>
@@ -62,17 +60,6 @@
                                 <input type="number" id="duree" name="duree" value="{{$revenus->duree}}" class="w-full rounded text-black"  style="color:black">
                             </div>
 
-                            <div>
-                                <label for="frequence">Fréquence</label>
-                                <select id="frequence" name="frequence" class="w-full rounded text-black"  style="color:black">
-                                    <option value="">Choisir...</option>
-                                    <option value="1" {{ $revenus->frequence == 1 ? 'selected' : '' }}>Tous les jours</option>
-                                    <option value="7" {{ $revenus->frequence == 7 ? 'selected' : '' }}>Toutes les semaines</option>
-                                    <option value="30" {{ $revenus->frequence == 30 ? 'selected' : '' }}>Tous les mois</option>
-                                    <option value="365" {{ $revenus->frequence == 365 ? 'selected' : '' }}>Tous les ans</option>
-                                </select>
-                            </div>
-
                         </div>
                           
                                 
@@ -82,11 +69,11 @@
                     </div>
 
                     <script>
-                        const radios = document.querySelectorAll('input[name="ponctuel"]');
+                        const radios = document.querySelectorAll('input[name="frequence"]');
                         const recurrentFields = document.getElementById('recurrent-fields');
 
                         function toggleFields() {
-                            const value = document.querySelector('input[name="ponctuel"]:checked').value;
+                            const value = document.querySelector('input[name="frequence"]:checked').value;
 
                             if (value === "0") {
                                 recurrentFields.classList.remove('hidden');

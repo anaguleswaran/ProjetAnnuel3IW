@@ -9,7 +9,8 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
-                <form method="POST" action="{{ url('/revenus') }}">
+
+                <form method="POST" action="{{ route('revenus.store',  ['compteId' => $compteId]) }}">
                     @csrf
                     <div class="space-y-4">
 
@@ -32,11 +33,11 @@
                         <div>
                             <label class="block mb-2">Type de revenu</label>
                             <label class="mr-6">
-                                <input type="radio" name="ponctuel" value="1" checked>Ponctuel
+                                <input type="radio" name="frequence" value="0" checked>Ponctuel
                             </label>
 
                             <label>
-                                <input type="radio" name="ponctuel" value="0"> Récurrent
+                                <input type="radio" name="frequence" value="1"> Récurrent
                             </label>
                         </div>
 
@@ -57,17 +58,6 @@
                                 <input type="number" id="duree" name="duree" class="w-full rounded text-black"  style="color:black">
                             </div>
 
-                            <div>
-                                <label for="frequence">Fréquence</label>
-                                <select id="frequence" name="frequence" class="w-full rounded text-black"  style="color:black">
-                                    <option value="">Choisir...</option>
-                                    <option value="1">Tous les jours</option>
-                                    <option value="7">Toutes les semaines</option>
-                                    <option value="30">Tous les mois</option>
-                                    <option value="365">Tous les ans</option>
-                                </select>
-                            </div>
-
                         </div>
 
                         <button type="submit">Ajouter mon revenu</button>
@@ -75,16 +65,16 @@
                     </div>
 </form>
                     <script>
-                        const radios = document.querySelectorAll('input[name="ponctuel"]');
+                        const radios = document.querySelectorAll('input[name="frequence"]');
                         const recurrentFields = document.getElementById('recurrent-fields');
 
                         function toggleFields() {
-                            const value = document.querySelector('input[name="ponctuel"]:checked').value;
+                            const value = document.querySelector('input[name="frequence"]:checked').value;
 
                             if (value === "0") {
-                                recurrentFields.classList.remove('hidden');
-                            } else {
                                 recurrentFields.classList.add('hidden');
+                            } else {
+                                recurrentFields.classList.remove('hidden');
                             }
                         }
 
