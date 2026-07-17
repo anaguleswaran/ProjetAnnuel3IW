@@ -33,12 +33,12 @@
                         <div>
                             <label class="block mb-2">Type de revenu</label>
                             <label class="mr-6">
-                                <input type="radio" name="frequence" value="1" {{ $revenus->frequence == 0 ? 'checked' : '' }}>
+                                <input type="radio" name="frequence" value="0" {{ $revenus->frequence == 0 ? 'checked' : '' }}>
                                 Ponctuel
                             </label>
 
                             <label>
-                                <input type="radio" name="frequence" value="0" {{ $revenus->frequence == 1 ? 'checked' : '' }}>
+                                <input type="radio" name="frequence" value="1" {{ $revenus->frequence == 1 ? 'checked' : '' }}>
                                 Récurrent
                             </label>
                         </div>
