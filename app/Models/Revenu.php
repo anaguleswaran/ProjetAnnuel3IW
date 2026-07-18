@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use HasFactory;
+use App\Models\Compte;
 
 class Revenu extends Model
 {
@@ -11,7 +13,6 @@ class Revenu extends Model
         'nom', 
         'description',
         'duree',
-        'ponctuel',
         'frequence',
         'montant',
         'date_debut',
@@ -19,4 +20,9 @@ class Revenu extends Model
         
         'compte_id'
     ];
+
+    public function compte() {
+        return $this->belongsTo(Compte::class);
+    }
+
 }

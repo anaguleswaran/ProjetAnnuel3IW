@@ -10,7 +10,7 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
 
-                    <a href="{{ route('depenses.create', $compteId) }}">Ajouter une Depense</a> 
+                    <a href="{{ route('depenses.create', $compteId) }}">Ajouter une dépense</a> 
                     <br>
 
                     @if($depenses->isEmpty())
@@ -25,22 +25,22 @@
 
                                     <p><strong>Montant : </strong>
                                     {{ $depense->montant }} €</p>
+                                    
+                                    <p><strong>Date de début</strong>
+                                    {{ $depense->date_debut }}</p>
 
-                                    @if ($depense->frequence)
-                                        <p><strong>Fréquence : </strong> ponctuel</p>
-                                        <p><strong>Date de début</strong>
-                                        {{ $depense->date_debut }}</p>
-                                            
+                                    @if (!$depense->frequence)
+                                        <p><strong>Fréquence : </strong> ponctuel</p>                                            
                                     @else 
                                         <p><strong>Fréquence :</strong>
-                                        Tout les {{ $depense->duréé }} mois</p>
+                                        Tout les {{ $depense->duree }} mois</p>
                                     @endif                                
 
                                     <br>                            
                                     <form method="POST" action="{{ route('depenses.destroy', $depense->id) }}">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit">Supprimer ma depense</button>
+                                        <button type="submit">Supprimer ma dépense</button>
                                     </form>   
                                 </div>
                                 </a>
@@ -49,7 +49,7 @@
                         @endforeach
                         
                     @endif
-
+                    <a href="{{ route('comptes.show', $compteId) }}">Retour au compte</a>
                 </div>
             </div>
         </div>

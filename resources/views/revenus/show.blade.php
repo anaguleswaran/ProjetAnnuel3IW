@@ -15,16 +15,18 @@
                             <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded">
                                 <strong>Nom</strong>
                                 <p>{{ $revenus->nom }}</p>
+                                
+                                @if ($revenus->description)
+                                    <p><strong>Description : </strong>
+                                    {{ $revenus->description }}</p>
+                                @endif
 
-                                <strong>Description</strong>
-                                <p>{{ $revenus->description }}</p>
-
-                                @if ($revenus->ponctuel)
+                                @if (!$revenus->frequence)
                                     <strong>Montant</strong>
                                     <p>{{ $revenus->montant }} €</p>
                                     
                                     <strong>Date de début</strong>
-                                    <p>{{ $revenus->montant }}</p>
+                                    <p>{{ $revenus->date_debut }}</p>
                                             
                                 @else
                                     <strong>Durée</strong>
@@ -43,9 +45,11 @@
                                 <form method="POST" action="{{ route('revenus.destroy', $revenus->id, $revenus->compte_id) }}">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit">Supprimer la salle</button>
+                                    <button type="submit">Supprimer le revenu</button>
                                 </form>
-                                <a href="{{ route('revenus.edit', $revenus->id) }}">Modifier mon revenu</a>
+                                <a href="{{ route('revenus.edit', $revenus->id) }}">Modifier le revenu</a><br><br>
+                                <a href="{{ route('revenus.index', $revenus->compte_id) }}">Retour à la liste des revenus</a><br>
+                                <a href="{{ route('comptes.show', $revenus->compte_id) }}">Retour au compte</a>                                
                             </div>
                         </div>
 

@@ -3,7 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use HasFactory;
+use App\Models\Revenu;
+use App\Models\Depense;
+
 class Compte extends Model
 {
 
@@ -16,4 +20,13 @@ class Compte extends Model
         'taux_imposition',
         'user_id',
     ];
+
+    
+    public function revenus() {
+        return $this->hasMany(Revenu::class);
+    }
+
+    public function depenses() {
+        return $this->hasMany(Depense::class);
+    }
 }

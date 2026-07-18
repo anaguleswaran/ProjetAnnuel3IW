@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            depense
+            Dépense
         </h2>
     </x-slot>
 
@@ -15,11 +15,13 @@
                             <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded">
                                 <strong>Nom</strong>
                                 <p>{{ $depenses->nom }}</p>
+                                
+                                @if ($depenses->description)
+                                    <p><strong>Description : </strong>
+                                    {{ $depenses->description }}</p>
+                                @endif
 
-                                <strong>Description</strong>
-                                <p>{{ $depenses->description }}</p>
-
-                                @if ($depenses->ponctuel)
+                                @if (!$depenses->frequence)
                                     <strong>Montant</strong>
                                     <p>{{ $depenses->montant }} €</p>
                                     
@@ -43,9 +45,11 @@
                                 <form method="POST" action="{{ route('depenses.destroy', $depenses->id, $depenses->compte_id) }}">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit">Supprimer ma depense</button>
+                                    <button type="submit">Supprimer la dépense</button>
                                 </form>
-                                <a href="{{ route('depenses.edit', $depenses->id, $depenses->compte_id) }}">Modifier mon depense</a>
+                                <a href="{{ route('depenses.edit', $depenses->id, $depenses->compte_id) }}">Modifier la dépense</a><br><br>
+                                <a href="{{ route('depenses.index', $depenses->compte_id) }}">Retour à la liste des dépense</a><br>
+                                <a href="{{ route('comptes.show', $depenses->compte_id) }}">Retour au compte</a>
                             </div>
                         </div>
 

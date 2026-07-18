@@ -63,7 +63,7 @@
                         </div>
                           
                                 
-                                    <button type="submit">Modifier mon depense</button>
+                                    <button type="submit">Modifier la dépense</button>
                                 </form>
 
                     </div>
@@ -76,9 +76,9 @@
                             const value = document.querySelector('input[name="frequence"]:checked').value;
 
                             if (value === "0") {
-                                recurrentFields.classList.remove('hidden');
-                            } else {
                                 recurrentFields.classList.add('hidden');
+                            } else {
+                                recurrentFields.classList.remove('hidden');
                             }
                         }
 
