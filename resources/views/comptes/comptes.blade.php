@@ -18,14 +18,15 @@
                                     <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded">
 
 
-                                        <h3>{{ $compte->nom }}</h3>
+                                        <h1 class="text-xl font-bold mb-2"><strong>{{ $compte->nom }}</strong></h1>
                                         @if ($compte->description)
                                             <p>
                                                 <strong>Description :</strong>
                                                 {{ $compte->description }}
                                             </p>
                                         @endif
-
+                                        <p>Solde : {{$compte->solde}}</p>
+                                        
                                         <form action='comptes/{{$compte->id}}' method="POST">
                                             @csrf
                                             @method('DELETE')
@@ -34,16 +35,18 @@
                                                 Supprimer
                                             </button>
                                         </form>
-                                        <a href="{{ route('revenus.index', $compte->id) }}" class="px-4 py-2 bg-blue-500 text-white rounded">
+                                        <br>
+                                        <a href="{{ route('revenus.index', $compte->id) }}" style="margin-right: 235px; margin-left:105px">
                                             Voir les revenus
                                         </a>
-                                        <a href="{{ route('revenus.create', $compte->id) }}" class="px-4 py-2 bg-blue-500 text-white rounded">
+                                        <a href="{{ route('revenus.create', $compte->id) }}" >
                                             Ajouter un revenu
                                         </a>
-                                        <a href="{{ route('depenses.index', $compte->id) }}" class="px-4 py-2 bg-blue-500 text-white rounded">
+                                        <br><br>
+                                        <a href="{{ route('depenses.index', $compte->id) }}" style="margin-right: 220px; margin-left:100px">
                                             Voir les dépenses
                                         </a>
-                                        <a href="{{ route('depenses.create', $compte->id) }}" class="px-4 py-2 bg-blue-500 text-white rounded">
+                                        <a href="{{ route('depenses.create', $compte->id) }}" >
                                             Ajouter une dépense
                                         </a>
                                     </div>

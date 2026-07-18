@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\Compte;
 
 class Depense extends Model
 {
@@ -17,4 +19,8 @@ class Depense extends Model
         'date_fin',        
         'compte_id'
     ];
+
+    public function compte() {
+        return $this->belongsTo(Compte::class);
+    }
 }
