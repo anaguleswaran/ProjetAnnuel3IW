@@ -10,7 +10,7 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
 
-                    <a href='/depenses/create'>Ajouter une Depense</a> 
+                    <a href="{{ route('depenses.create', $compteId) }}">Ajouter une dépense</a> 
                     <br>
 
                     @if($depenses->isEmpty())
@@ -18,43 +18,29 @@
                     @else
                         @foreach ($depenses as $depense)
                             <div class="grid grid-cols-3 gap-4">
-                                <a href="{{ route('depenses.update', $depense->id) }}">
+                                <a href="{{ route('depenses.show', $depense->id) }}">
                                 <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded">
-                                    <strong>Nom</strong>
-                                    <p>{{ $depense->nom }}</p>
+                                    <p><strong>Nom : </strong>
+                                    {{ $depense->nom }}</p>
 
-                                    <strong>Description</strong>
-                                    <p>{{ $depense->description }}</p>
+                                    <p><strong>Montant : </strong>
+                                    {{ $depense->montant }} €</p>
+                                    
+                                    <p><strong>Date de début</strong>
+                                    {{ $depense->date_debut }}</p>
 
-                                    @if ($depense->ponctuel)
-                                        <strong>Montant</strong>
-                                        <p>{{ $depense->montant }} €</p>
-                                            
-                                        <strong>Date de début</strong>
-                                        <p>{{ $depense->date_debut }}</p>
-                                            
+                                    @if (!$depense->frequence)
+                                        <p><strong>Fréquence : </strong> ponctuel</p>                                            
                                     @else 
-                                        <strong>Fréquence</strong>
-                                        <p>Tout les {{ $depense->frequence }} mois</p>
-                                        
-                                        <strong>Durée</strong>
-                                        <p>{{ $depense->duree }}</p>
-
-                                        <strong>Montant</strong>
-                                        <p>{{ $depense->montant }}</p>
-
-                                        <strong>Date de début</strong>
-                                        <p>{{ $depense->date_debut }}</p>
-                                            
-                                        <strong>Date de fin</strong>
-                                        <p>{{ $depense->date_fin }}</p>
+                                        <p><strong>Fréquence :</strong>
+                                        Tout les {{ $depense->duree }} mois</p>
                                     @endif                                
 
                                     <br>                            
                                     <form method="POST" action="{{ route('depenses.destroy', $depense->id) }}">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit">Supprimer la salle</button>
+                                        <button type="submit">Supprimer ma dépense</button>
                                     </form>   
                                 </div>
                                 </a>
@@ -63,7 +49,7 @@
                         @endforeach
                         
                     @endif
-
+                    <a href="{{ route('comptes.show', $compteId) }}">Retour au compte</a>
                 </div>
             </div>
         </div>

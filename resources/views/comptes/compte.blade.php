@@ -10,52 +10,87 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
 
-                    <div class="space-y-4">
-                        <h1>{{$compte->nom}}</h1>
-
-                        <p>
-                            <strong>Description :</strong>
-                            {{ $compte->description }}
+                        <div class="grid grid-cols-3 gap-4">
                             
-                        </p>
+                            <h1 class="text-xl font-bold mb-2"><strong>{{$compte->nom}}</strong></h1>
 
-                        <p>
-                            <strong>Taux de rémunération :</strong>
-                            {{ $compte->taux_remuneration }} %
-                        </p>
+                            <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded">
 
-                        <p>
-                            <strong>Taux d'imposition :</strong>
-                            {{ $compte->taux_imposition }} %
-                        </p>
+                                <p>
+                                    <strong>Description :</strong>
+                                    {{ $compte->description }}
+                                    
+                                </p>
 
-                    </div>
-            
+                                <p>
+                                    <strong>Taux de rémunération :</strong>
+                                    {{ $compte->taux_remuneration }} %
+                                </p>
 
-                        <br>
-                        <br>
+                                <p>
+                                    <strong>Taux d'imposition :</strong>
+                                    {{ $compte->taux_imposition }} %
+                                </p>
 
-                        <a href="/comptes/update/{{ $compte->id }}">Modifier mon compte</a>
-                        <form action='comptes/{{$compte->id}}' method="POST">
-                                            @csrf
-                                            @method('DELETE')
+                                <p>
+                                    <strong>Solde actuel :</strong>
+                                    {{ $solde }} €
+                                </p>
 
-                                            <button type="submit" onclick="return confirm('Voulez-cous supprimez ce compte ?')">
-                                                Supprimer
-                                            </button>
-                                        </form>
-                                        <a href="{{ route('revenus', $compte->id) }}" class="px-4 py-2 bg-blue-500 text-white rounded">
+                                <br>
+
+                                <form method="GET" action="{{ url('/comptes/' . $compte->id) }}">
+
+                                    <label class="block mb-2">Calculer le solde à une date donnée</label>
+
+                                    <input type="date" name="date_reference" value="{{ $dateReference }}" class="rounded" style="color: black">
+                                    <button type="submit">Calculer le solde</button>
+
+                                </form>
+
+                                @if($soldeDate !== null)
+
+                                    <div class="mt-6">
+                                        <p>
+                                            <strong>Solde au {{ $dateReference }} :</strong>
+                                            {{ $soldeDate }} €
+                                        </p>
+
+                                    </div>
+
+                                @endif
+
+                                                
+
+                                <br>
+                                <br>
+                                <form action='/comptes/{{$compte->id}}' method="POST">
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button type="submit" >Supprimer</button>
+                                </form>
+                                <br>
+                                <a href="{{ route('revenus.index', $compte->id) }}" style="margin-right: 235px; margin-left:105px">
                                             Voir les revenus
                                         </a>
-                                        <a href="{{ route('revenus.create', $compte->id) }}" class="px-4 py-2 bg-blue-500 text-white rounded">
+                                        <a href="{{ route('revenus.create', $compte->id) }}" >
                                             Ajouter un revenu
                                         </a>
-                                        <a href="{{ route('depenses.index', $compte->id) }}" class="px-4 py-2 bg-blue-500 text-white rounded">
+                                        <br><br>
+                                        <a href="{{ route('depenses.index', $compte->id) }}" style="margin-right: 220px; margin-left:100px">
                                             Voir les dépenses
                                         </a>
-                                        <a href="{{ route('depenses.create', $compte->id) }}" class="px-4 py-2 bg-blue-500 text-white rounded">
+                                        <a href="{{ route('depenses.create', $compte->id) }}" >
                                             Ajouter une dépense
                                         </a>
+                                    <br><br>
+
+                                <a href="/comptes/update/{{ $compte->id }}">Modifier le compte</a><br>
+                                <a href="/comptes">Retour à la liste des comptes</a>
+                            </div>
+                        </div>
+
                 </div>
             </div>
         </div>

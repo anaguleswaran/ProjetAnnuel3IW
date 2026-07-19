@@ -16,8 +16,8 @@ return new class extends Migration
             $table->id();
             $table->string('nom', 80);
             $table->text('description')->nullable();
-            $table->decimal('taux_remuneration',2)->default(0);
-            $table->decimal('taux_imposition',2)->default(0);
+            $table->decimal('taux_remuneration',4,2)->default(0);
+            $table->decimal('taux_imposition',4,2)->default(0);
             $table->timestamps();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
         });

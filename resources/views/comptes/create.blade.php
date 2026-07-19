@@ -16,16 +16,16 @@
                             @csrf
                             
                             <label for="nom">Nom du compte :</label>
-                            <input type="text" id="nom" name="nom" class="w-full rounded text-black" required>
+                            <input type="text" id="nom" name="nom" class="w-full rounded text-black" style="color: black" required>
                             <br>
                             <label for="description">Description :</label>
-                            <textarea id="description" name="description" class="w-full rounded text-black"></textarea>
+                            <textarea id="description" name="description" class="w-full rounded text-black" style="color: black"></textarea>
                             <br>
                             <label for="taux_remuneration">Taux de rémunération :</label>
-                            <input type="number" id="taux_remuneration" name="taux_remuneration" step="0.01" class="w-full rounded text-black">
+                            <input type="number" id="taux_remuneration" name="taux_remuneration" step="0.01" class="w-full rounded text-black" style="color: black">
                             <br>
                             <label for="taux_imposition">Taux d'imposition :</label>
-                            <input type="number" id="taux_imposition" name="taux_imposition" step="0.01" class="w-full rounded text-black">
+                            <input type="number" id="taux_imposition" name="taux_imposition" step="0.01" class="w-full rounded text-black" style="color: black">
                             <br>
                             <button type="submit">Ajouter le compte</button>
                         </form>
@@ -33,5 +33,5 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> 
 </x-app-layout>    

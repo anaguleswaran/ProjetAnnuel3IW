@@ -18,37 +18,27 @@
                                     <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded">
 
 
-                                        <h3>{{ $compte->nom }}</h3>
+                                        <h1 class="text-xl font-bold mb-2"><strong>{{ $compte->nom }}</strong></h1>
                                         @if ($compte->description)
                                             <p>
                                                 <strong>Description :</strong>
                                                 {{ $compte->description }}
                                             </p>
                                         @endif
-
+                                        <p>Solde : {{$compte->solde}} €</p>
+                                        
                                         <form action='comptes/{{$compte->id}}' method="POST">
                                             @csrf
                                             @method('DELETE')
 
                                             <button type="submit" onclick="return confirm('Voulez-cous supprimez ce compte ?')">
-                                                Supprimer
+                                                Supprimer le compte
                                             </button>
-                                        </form>
-                                        <a href="{{ route('revenus', $compte->id) }}" class="px-4 py-2 bg-blue-500 text-white rounded">
-                                            Voir les revenus
-                                        </a>
-                                        <a href="{{ route('revenus.create', $compte->id) }}" class="px-4 py-2 bg-blue-500 text-white rounded">
-                                            Ajouter un revenu
-                                        </a>
-                                        <a href="{{ route('depenses.index', $compte->id) }}" class="px-4 py-2 bg-blue-500 text-white rounded">
-                                            Voir les dépenses
-                                        </a>
-                                        <a href="{{ route('depenses.create', $compte->id) }}" class="px-4 py-2 bg-blue-500 text-white rounded">
-                                            Ajouter une dépense
-                                        </a>
+                                        </form>                                        
                                     </div>
                                 </a>
                             </div>
+                            <br>
                         @endforeach 
                     </div>
                     <br>
