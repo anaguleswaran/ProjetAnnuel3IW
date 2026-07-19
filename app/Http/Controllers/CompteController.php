@@ -9,7 +9,7 @@ use Carbon\Carbon;
 class CompteController extends Controller
 {
     public function index() {
-        $comptes = Compte::all();
+        $comptes = auth()->user()->comptes()->get();
         foreach ($comptes as $compte) {
             $compte->solde = $this->calculSolde($compte->id);
         }
@@ -105,7 +105,7 @@ class CompteController extends Controller
 
         $solde = ($revenuTotal - $depenseTotal) * (1+$compte->taux_remuneration/100) * (1-$compte->taux_imposition/100);
         
-        return $solde;
+        return round($solde,2);
     }
 
 }
