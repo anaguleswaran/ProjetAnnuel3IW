@@ -16,17 +16,17 @@
 
                         <div>
                             <label for="nom">Nom</label>
-                            <input type="text" id="nom" name="nom" class="w-full rounded text-black"  style="color:black" required>
+                            <input type="text" id="nom" name="nom" class="w-full rounded-xl border-gray-300 p-3 text-black"  style="color:black" required>
                         </div>
 
                         <div>
                             <label for="description">Description</label>
-                            <textarea id="description" name="description" class="w-full rounded text-black"  style="color:black"></textarea>
+                            <textarea id="description" name="description" class="w-full rounded-xl border-gray-300 p-3 text-black"  style="color:black"></textarea>
                         </div>
 
                         <div>
                             <label for="montant">Montant (€)</label>
-                            <input type="number" step="1" id="montant" name="montant" class="w-full rounded text-black"  style="color:black" required>
+                            <input type="number" step="1" id="montant" name="montant" class="w-full rounded-xl border-gray-300 p-3 text-black"  style="color:black" required>
                         </div>
 
 
@@ -43,24 +43,31 @@
 
                         <div>
                             <label for="date_debut">Date de début</label>
-                            <input type="date" id="date_debut" name="date_debut" class="w-full rounded text-black"  style="color:black">
+                            <input type="date" id="date_debut" name="date_debut" class="w-full rounded-xl border-gray-300 p-3 text-black"  style="color:black">
                         </div>
 
                     
                         <div id="recurrent-fields" class="hidden space-y-4">
                             <div>
                                 <label for="date_fin">Date de fin</label>
-                                <input type="date" id="date_fin" name="date_fin" class="w-full rounded text-black"  style="color:black">
+                                <input type="date" id="date_fin" name="date_fin" class="w-full rounded-xl border-gray-300 p-3 text-black"  style="color:black">
                             </div>
 
                             <div>
                                 <label for="duree">Durée</label>
-                                <input type="number" id="duree" name="duree" class="w-full rounded text-black"  style="color:black">
+                                <input type="number" id="duree" name="duree" class="w-full rounded-xl border-gray-300 p-3 text-black"  style="color:black">
                             </div>
 
                         </div>
-
-                        <button type="submit">Ajouter mon revenu</button>
+                        <div style="display: flex; justify-content:space-between; margin-top: 20px;">
+                            <button type="submit" 
+                            style="background:#2563eb; color:white; padding:10px 20px; border-radius:12px; font-weight:600; text-decoration:none;">
+                                + Ajouter mon revenu
+                            </button>
+                            <a href="{{ route('revenus.index', $compteId) }}" style="border:2px solid #374151; color:#374151; padding:10px 20px; border-radius:12px; font-weight:600 text-decoration:none;">
+                                Retour à la liste des revenus
+                            </a>
+                        </div>
 
                     </div>
 </form>

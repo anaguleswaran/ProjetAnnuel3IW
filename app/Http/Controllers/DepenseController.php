@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Depense;
+use Carbon\Carbon;
 
 class DepenseController extends Controller
 {
@@ -13,6 +14,10 @@ class DepenseController extends Controller
     public function index(string $compteId)
     {
         $depenses = depense::select('*')->where('compte_id', $compteId)->get();
+        foreach ($depenses as $depense) {
+            $depense->date_debut = Carbon::parse($depense->date_debut)->format('d/m/Y');
+            $depense->date_fin = Carbon::parse($depense->date_fin)->format('d/m/Y');
+        }
          return view('depenses.index', ['depenses' => $depenses, 'compteId' => $compteId]);
     }
 
@@ -48,6 +53,10 @@ class DepenseController extends Controller
     public function show(string $id)
     {
         $depenses=Depense::findOrFail($id);
+        $depenses->date_debut = Carbon::parse($depenses->date_debut)->format('d/m/Y');
+        if ($depenses->date_fin) {
+            $depenses->date_fin = Carbon::parse($depenses->date_fin)->format('d/m/Y');
+        }
         return view('depenses.show', ['depenses'=> $depenses]);
     }
 

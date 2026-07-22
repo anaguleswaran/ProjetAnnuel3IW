@@ -10,7 +10,7 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
 
-                        <div class="grid grid-cols-3 gap-4">
+                        <div class="grid grid-cols-3zz gap-4">
                             
                             <h1 class="text-xl font-bold mb-2"><strong>{{$compte->nom}}</strong></h1>
 
@@ -43,15 +43,15 @@
 
                                     <label class="block mb-2">Calculer le solde à une date donnée</label>
 
-                                    <input type="date" name="date_reference" value="{{ $dateReference }}" class="rounded" style="color: black">
+                                    <input type="date" name="date_reference" value="{{ $dateReference }}" style="width:220px; padding:10px 14px; border:1px solid #d1d5db; border-radius:12px; font-size:14px; color:#111827;">
                                     <button type="submit">Calculer le solde</button>
 
                                 </form>
 
                                 @if($soldeDate !== null)
 
-                                    <div class="mt-6">
-                                        <p>
+                                    <div>
+                                        <p style="font-size:14px; font-weight:600; color:#374151; margin-bottom:10px;">
                                             <strong>Solde au {{ $dateReference }} :</strong>
                                             {{ $soldeDate }} €
                                         </p>
@@ -60,34 +60,34 @@
 
                                 @endif
 
-                                                
-
-                                <br>
-                                <br>
-                                <form action='/comptes/{{$compte->id}}' method="POST">
+                                <div style="border-top:2px solid #d1d5db; border-bottom:2px solid #d1d5db; padding:13px 0; margin-top:20px;">
+                                    <div style="display:flex; justify-content:space-between; align-items:center;  padding:5px; margin-top:8px;">
+                                        <a href="{{ route('revenus.index', $compte->id) }}" style=" border:2px solid #166534; color:#166534; border-radius:12px; padding:10px 20px; font-weight:600; text-decoration:none;">
+                                            Voir les revenus
+                                        </a>
+                                        <a href="{{ route('revenus.create', $compte->id) }}" style="color:#166534; font-weight:700; text-decoration:none;">
+                                            + Ajouter un revenu
+                                        </a>
+                                    </div>
+                                    <div style="display:flex; justify-content:space-between; align-items:center; padding:6px; margin-top:8px;">
+                                            <a href="{{ route('depenses.index', $compte->id) }}" style=" border:2px solid #166534; color:#166534; border-radius:12px; padding:10px 20px; font-weight:600; text-decoration:none;">
+                                                Voir les dépenses
+                                            </a>
+                                            <a href="{{ route('depenses.create', $compte->id) }}" style="color:#166534; font-weight:700; text-decoration:none;">
+                                            + Ajouter une dépense
+                                            </a>
+                                    </div>
+                                    <div style="display:flex; justify-content: space-between; margin-top: 40px;">
+                                        <a href="/comptes/update/{{ $compte->id }}" style="background:#2563eb; color:white; padding:10px 20px; border-radius:12px; font-weight:600; text-decoration:none;">Modifier le compte</a><br>
+                                        <a href="/comptes" style="border:2px solid #374151; color:#374151; padding:10px 20px; border-radius:12px; font-weight:600; text-decoration:none;">Retour à la liste des comptes</a>
+                                    </div>
+                                </div>
+                                <form action='/comptes/{{$compte->id}}' method="POST" style="margin-top: 20px;">
                                     @csrf
                                     @method('DELETE')
 
-                                    <button type="submit" >Supprimer</button>
+                                    <button type="submit" style="border: 2px solid #dc2626; color: #dc2626; border-radius: 12px; padding: 10px 20px; font-weight: 600; background: white; cursor: pointer;">Supprimer</button>
                                 </form>
-                                <br>
-                                <a href="{{ route('revenus.index', $compte->id) }}" style="margin-right: 235px; margin-left:105px">
-                                            Voir les revenus
-                                        </a>
-                                        <a href="{{ route('revenus.create', $compte->id) }}" >
-                                            Ajouter un revenu
-                                        </a>
-                                        <br><br>
-                                        <a href="{{ route('depenses.index', $compte->id) }}" style="margin-right: 220px; margin-left:100px">
-                                            Voir les dépenses
-                                        </a>
-                                        <a href="{{ route('depenses.create', $compte->id) }}" >
-                                            Ajouter une dépense
-                                        </a>
-                                    <br><br>
-
-                                <a href="/comptes/update/{{ $compte->id }}">Modifier le compte</a><br>
-                                <a href="/comptes">Retour à la liste des comptes</a>
                             </div>
                         </div>
 
