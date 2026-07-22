@@ -25,7 +25,7 @@ class CompteController extends Controller
         $soldeDate=null;
         if ($dateReference) {
             $soldeDate = $this->calculSolde($id, $dateReference);
-            $dateReference = carbon::parse($dateReference);
+            $dateReference = carbon::parse($dateReference)->format('d/m/Y');
         }
         return view('comptes/compte', ['compte'=> $compte, 'solde' => $solde, 'soldeDate' => $soldeDate, 'dateReference' => $dateReference]);
     }
