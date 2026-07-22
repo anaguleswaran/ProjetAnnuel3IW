@@ -22,6 +22,7 @@ RUN composer install
 RUN npm install && npm run build
 
 RUN a2enmod rewrite
+# RUN a2enmod ssl rewrite
 
 RUN chown -R www-data:www-data storage bootstrap/cache
 
