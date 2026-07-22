@@ -4,16 +4,27 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Revenu;
+use Carbon\Carbon;
 
 class RevenuController extends Controller
 {
     public function index(string $compteId) {
         $revenus = Revenu::select('*')->where('compte_id', $compteId)->get();
+
+        foreach ($revenus as $revenu) {
+            $revenu->date_debut = Carbon::parse($revenu->date_debut)->format('d/m/Y');
+            $revenu->date_fin = Carbon::parse($revenu->date_fin)->format('d/m/Y');
+        }
+
          return view('revenus.index', ['revenus' => $revenus, 'compteId' => $compteId]);
     }
 
     public function show(string $id) {
         $revenus=Revenu::findOrFail($id);
+        $revenus->date_debut = Carbon::parse($revenus->date_debut)->format('d/m/Y');
+        if ($revenus->date_fin) {
+            $revenus->date_fin = Carbon::parse($revenus->date_fin)->format('d/m/Y');
+        }
         return view('revenus.show', ['revenus'=> $revenus]);
     }
 

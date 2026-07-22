@@ -10,7 +10,7 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
 
-                        <div class="grid grid-cols-3 gap-4">
+                        <div class="grid grid-cols-3z gap-4">
                             
                             <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded">
                                 <strong>Nom</strong>
@@ -41,15 +41,24 @@
                                     <strong>Date de fin</strong>
                                     <p>{{ $revenus->date_fin }}</p>
                                 @endif
-                                <br>                           
-                                <form method="POST" action="{{ route('revenus.destroy', $revenus->id, $revenus->compte_id) }}">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit">Supprimer le revenu</button>
-                                </form>
-                                <a href="{{ route('revenus.edit', $revenus->id) }}">Modifier le revenu</a><br><br>
-                                <a href="{{ route('revenus.index', $revenus->compte_id) }}">Retour à la liste des revenus</a><br>
-                                <a href="{{ route('comptes.show', $revenus->compte_id) }}">Retour au compte</a>                                
+                                <div style="border-top:2px solid #d1d5db; border-bottom:2px solid #d1d5db; padding:15px 0; margin-top:25px;">                                    
+                                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">                                        
+                                        <a href="{{ route('revenus.edit', $revenus->id) }}"
+                                        style="background:#2563eb; color:white; padding:10px 20px; border-radius:12px; font-weight:600; text-decoration:none;">
+                                            Modifier le revenu
+                                        </a>
+                                    </div>
+                                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                                        <a href="{{ route('revenus.index', $revenus->compte_id) }}"
+                                        style="border:2px solid #374151; color:#374151; padding:10px 20px; border-radius:12px; font-weight:600; text-decoration:none;">
+                                            Retour à la liste des revenus
+                                        </a>
+                                        <a href="{{ route('comptes.show', $revenus->compte_id) }}"
+                                        style="border:2px solid #374151; color:#374151; padding:10px 20px; border-radius:12px; font-weight:600; text-decoration:none;">
+                                            Retour au compte
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 

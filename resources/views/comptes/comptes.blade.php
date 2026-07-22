@@ -31,7 +31,8 @@
                                             @csrf
                                             @method('DELETE')
 
-                                            <button type="submit" onclick="return confirm('Voulez-cous supprimez ce compte ?')">
+                                            <button type="submit" onclick="return confirm('Voulez-cous supprimez ce compte ?')"
+                                            style="border: 2px solid #dc2626; color: #dc2626; border-radius: 12px; padding: 6px 10px; cursor: pointer; margin-top: 10px; margin-right: 5px">
                                                 Supprimer le compte
                                             </button>
                                         </form>                                        
@@ -41,9 +42,7 @@
                             <br>
                         @endforeach 
                     </div>
-                    <br>
-                    <br>
-                    <a href="/comptes/create">Ajouter un compte</a>
+                    <a href="/comptes/create" style="background:#2563eb; color:white; padding:10px 20px; border-radius:12px; margin-top: 30px">+ Ajouter un compte</a>
                 
                 </div>
             </div>

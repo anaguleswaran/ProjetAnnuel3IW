@@ -16,18 +16,21 @@
                             @csrf
                             
                             <label for="nom">Nom du compte :</label>
-                            <input type="text" id="nom" name="nom" class="w-full rounded text-black" style="color: black" required>
+                            <input type="text" id="nom" name="nom" class="w-full rounded-xl border-gray-300 p-3 text-black" style="color: black" required>
                             <br>
                             <label for="description">Description :</label>
-                            <textarea id="description" name="description" class="w-full rounded text-black" style="color: black"></textarea>
+                            <textarea id="description" name="description" class="w-full rounded-xl border-gray-300 p-3 text-black" style="color: black"></textarea>
                             <br>
                             <label for="taux_remuneration">Taux de rémunération :</label>
-                            <input type="number" id="taux_remuneration" name="taux_remuneration" step="0.01" class="w-full rounded text-black" style="color: black">
+                            <input type="number" id="taux_remuneration" name="taux_remuneration" step="0.01" class="w-full rounded-xl border-gray-300 p-3 text-black" style="color: black">
                             <br>
                             <label for="taux_imposition">Taux d'imposition :</label>
-                            <input type="number" id="taux_imposition" name="taux_imposition" step="0.01" class="w-full rounded text-black" style="color: black">
+                            <input type="number" id="taux_imposition" name="taux_imposition" step="0.01" class="w-full rounded-xl border-gray-300 p-3 text-black" style="color: black">
                             <br>
-                            <button type="submit">Ajouter le compte</button>
+                            <div style="display: flex; justify-content: space-between; margin-top: 40px;">
+                                <button type="submit" style="background:#2563eb; color:white; padding:10px 20px; border-radius:12px;">+ Ajouter le compte</button>
+                                <a href="/comptes" style="border:2px solid #374151; color:#374151; padding:10px 20px; border-radius:12px; font-weight:600; text-decoration:none;">Retour à la liste des comptes</a>                            
+                            </div>
                         </form>
                     </div>
                 </div>

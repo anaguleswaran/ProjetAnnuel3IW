@@ -25,6 +25,7 @@ class CompteController extends Controller
         $soldeDate=null;
         if ($dateReference) {
             $soldeDate = $this->calculSolde($id, $dateReference);
+            $dateReference = carbon::parse($dateReference);
         }
         return view('comptes/compte', ['compte'=> $compte, 'solde' => $solde, 'soldeDate' => $soldeDate, 'dateReference' => $dateReference]);
     }
@@ -104,7 +105,7 @@ class CompteController extends Controller
         $revenuTotal = $this->calculTotal($compte->revenus(), $dateReference);
         $depenseTotal = $this->calculTotal($compte->depenses(), $dateReference);
 
-        $solde = ($revenuTotal - $depenseTotal) * (1+$compte->taux_remuneration/100) * (1-$compte->taux_imposition/100);
+        $solde = ($revenuTotal - $depenseTotal) * (1+($compte->taux_remuneration/100)) * (1-($compte->taux_imposition/100));
         
         return round($solde,2);
     }

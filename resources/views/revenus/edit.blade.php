@@ -16,17 +16,17 @@
 
                         <div>
                             <label for="nom">Nom</label>
-                            <input type="text" id="nom" name="nom" value="{{$revenus->nom}}" class="w-full rounded text-black"  style="color:black" required>
+                            <input type="text" id="nom" name="nom" value="{{$revenus->nom}}" class="w-full rounded-xl border-gray-300 p-3 text-black"  style="color:black" required>
                         </div>
 
                         <div>
                             <label for="description">Description</label>
-                            <textarea id="description" name="description" class="w-full rounded text-black"  style="color:black">{{ $revenus->description }}</textarea>
+                            <textarea id="description" name="description" class="w-full rounded-xl border-gray-300 p-3 text-black"  style="color:black">{{ $revenus->description }}</textarea>
                         </div>
 
                         <div>
                             <label for="montant">Montant (€)</label>
-                            <input type="number" step="1" id="montant" name="montant" value="{{$revenus->montant}}" class="w-full rounded text-black"  style="color:black" required>
+                            <input type="number" step="1" id="montant" name="montant" value="{{$revenus->montant}}" class="w-full rounded-xl border-gray-300 p-3 text-black"  style="color:black" required>
                         </div>
 
 
@@ -45,25 +45,33 @@
 
                         <div>
                             <label for="date_debut">Date de début</label>
-                            <input type="date" id="date_debut" name="date_debut" value="{{$revenus->date_debut}}" class="w-full rounded text-black"  style="color:black">
+                            <input type="date" id="date_debut" name="date_debut" value="{{$revenus->date_debut}}" class="w-full rounded-xl border-gray-300 p-3 text-black"  style="color:black">
                         </div>
 
                     
                         <div id="recurrent-fields" class="hidden space-y-4">
                             <div>
                                 <label for="date_fin">Date de fin</label>
-                                <input type="date" id="date_fin" name="date_fin" value="{{$revenus->date_fin}}" class="w-full rounded text-black"  style="color:black">
+                                <input type="date" id="date_fin" name="date_fin" value="{{$revenus->date_fin}}" class="w-full rounded-xl border-gray-300 p-3 text-black"  style="color:black">
                             </div>
 
                             <div>
                                 <label for="duree">Durée</label>
-                                <input type="number" id="duree" name="duree" value="{{$revenus->duree}}" class="w-full rounded text-black"  style="color:black">
+                                <input type="number" id="duree" name="duree" value="{{$revenus->duree}}" class="w-full rounded-xl border-gray-300 p-3 text-black"  style="color:black">
                             </div>
 
                         </div>
                           
-                                
-                                    <button type="submit">Modifier mon revenu</button>
+                                    <div style="display: flex; justify-content:space-between; margin-top: 20px;">                                        
+                                        <button type="submit"
+                                        style="background:#2563eb; color:white; padding:10px 20px; border-radius:12px; font-weight:600; text-decoration:none;">
+                                            Modifier mon revenu
+                                        </button>
+                                        <a href="{{ route('revenus.show', $revenus->id) }}"
+                                        style="border:2px solid #374151; color:#374151; padding:10px 20px; border-radius:12px; font-weight:600; text-decoration:none;">
+                                            Retour au revenu {{$revenus->nom}}
+                                        </a>
+                                    </div>
                                 </form>
 
                     </div>
