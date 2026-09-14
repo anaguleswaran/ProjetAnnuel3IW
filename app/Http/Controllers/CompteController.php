@@ -17,7 +17,9 @@ class CompteController extends Controller
     }
 
     public function show($id, Request $request) {
-        $compte=Compte::findOrFail($id);
+        // $compte=Compte::findOrFail($id);
+        $compte = auth()->user()->comptes()->findOrFail($id);
+
         $dateReference=$request->date_reference;
 
         $solde=$this->calculSolde($id);
@@ -46,7 +48,9 @@ class CompteController extends Controller
 
     public function update(Request $request, $id) {
 
-        $compte = Compte::findOrFail($id);
+        // $compte = Compte::findOrFail($id);
+        $compte = auth()->user()->comptes()->findOrFail($id);
+
 
         $compte->update([
             'nom' => $request->nom ?? $compte->nom,
@@ -59,12 +63,16 @@ class CompteController extends Controller
     }
 
     public function edit($id) {
-        $compte = Compte::findOrFail($id);
+        // $compte = Compte::findOrFail($id);
+        $compte = auth()->user()->comptes()->findOrFail($id);
+
         return view('/comptes/update', ['compte' => $compte]);
     }
 
     public function destroy($id) {
-        $delete = Compte::findOrFail($id);
+        // $delete = Compte::findOrFail($id);
+        $delete = auth()->user()->comptes()->findOrFail($id);
+
         $delete->deleteOrFail();
 
         return redirect('/comptes');
@@ -100,7 +108,8 @@ class CompteController extends Controller
     }
 
     public function calculSolde($id, $dateReference = null) {
-        $compte = Compte::findOrFail($id);
+        // $compte = Compte::findOrFail($id);
+        $compte = auth()->user()->comptes()->findOrFail($id);
         $revenuTotal = $this->calculTotal($compte->revenus(), $dateReference);
         $depenseTotal = $this->calculTotal($compte->depenses(), $dateReference);
 
