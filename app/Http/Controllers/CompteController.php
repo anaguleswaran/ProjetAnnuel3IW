@@ -30,6 +30,13 @@ class CompteController extends Controller
     }
 
     public function addCompte(Request $request) {
+        $request->validate([
+            'nom' => ['required', 'string', 'max:80'],
+            'description' => ['nullable', 'string'],
+            'taux_remuneration' => ['nullable', 'numeric', 'min:0', 'max:100'],
+            'taux_imposition' => ['nullable', 'numeric', 'min:0', 'max:100'],
+        ]);
+
         Compte::create([
             'nom' => $request->nom,
             'description' => $request->description ?? '',
@@ -47,6 +54,13 @@ class CompteController extends Controller
     public function update(Request $request, $id) {
 
         $compte = Compte::findOrFail($id);
+
+        $request->validate([
+            'nom' => ['required', 'string', 'max:80'],
+            'description' => ['nullable', 'string'],
+            'taux_remuneration' => ['nullable', 'numeric', 'min:0', 'max:100'],
+            'taux_imposition' => ['nullable', 'numeric', 'min:0', 'max:100'],
+        ]);
 
         $compte->update([
             'nom' => $request->nom ?? $compte->nom,

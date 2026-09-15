@@ -29,6 +29,17 @@ class RevenuController extends Controller
     }
 
     public function store(Request $request, string $compteId) {
+
+        $request->validate([
+            'nom' => ['required', 'string', 'max:80'],
+            'description' => ['nullable', 'string'],
+            'montant' => ['required', 'numeric', 'min:0'],
+            'date_debut' => ['required', 'date'],
+            'frequence' => ['required', 'boolean'],
+            'date_fin' => ['nullable', 'date', 'after_or_equal:date_debut'],
+            'duree' => ['nullable', 'integer', 'min:1'],
+        ]);
+
         Revenu::create([
             'nom' => $request->nom,
             'description' => $request->description ?? '',
@@ -48,6 +59,16 @@ class RevenuController extends Controller
 
     public function update(Request $request, string $id) {
         $revenu = Revenu::findOrFail($id);
+        
+        $request->validate([
+            'nom' => ['required', 'string', 'max:80'],
+            'description' => ['nullable', 'string'],
+            'montant' => ['required', 'numeric', 'min:0'],
+            'date_debut' => ['required', 'date'],
+            'frequence' => ['required', 'boolean'],
+            'date_fin' => ['nullable', 'date', 'after_or_equal:date_debut'],
+            'duree' => ['nullable', 'integer', 'min:1'],
+        ]);
 
         $revenu->update([
             'nom' => $request->nom ?? $revenu->nom,
