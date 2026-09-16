@@ -113,7 +113,16 @@ class CompteController extends Controller
     public function calculSolde($id, $dateReference = null) {
         $compte = Compte::findOrFail($id);
         
-        $dateDebut = Carbon::parse($compte->created_at)->startOfMonth();
+        // $dateDebut = Carbon::parse($compte->created_at)->startOfMonth();
+        $premiereDateRevenu = $compte->revenus()->min('date_debut');
+        $premiereDateDepense = $compte->depenses()->min('date_debut');
+
+        $dates = array_filter([
+            $premiereDateRevenu ? Carbon::parse($premiereDateRevenu)->startOfMonth() : null,
+            $premiereDateDepense ? Carbon::parse($premiereDateDepense)->startOfMonth() : null,
+        ]);
+        $dateDebut = min($dates);
+        
         $dateFin = $dateReference ? Carbon::parse($dateReference)->endOfMonth() : today()->endOfMonth();
 
         $tauxMensuel = ($compte->taux_remuneration / 100) / 12;
