@@ -37,6 +37,17 @@ class DepenseController extends Controller
     public function store(Request $request, string $compteId)
     {
         $compte = auth()->user()->comptes()->findOrFail($compteId);
+      
+        $request->validate([
+            'nom' => ['required', 'string', 'max:80'],
+            'description' => ['nullable', 'string'],
+            'montant' => ['required', 'numeric', 'min:0'],
+            'date_debut' => ['required', 'date'],
+            'frequence' => ['required', 'boolean'],
+            'date_fin' => ['required_if:frequence,1', 'date', 'after_or_equal:date_debut'],
+            'duree' => ['required_if:frequence,1', 'integer', 'min:1'],
+        ]);
+
         Depense::create([
             'nom' => $request->nom,
             'description' => $request->description ?? '',
@@ -84,6 +95,16 @@ class DepenseController extends Controller
         $depense = Depense::whereHas('compte', function ($query) {
             $query->where('user_id', auth()->id());
         })->findOrFail($id);
+
+        $request->validate([
+            'nom' => ['required', 'string', 'max:80'],
+            'description' => ['nullable', 'string'],
+            'montant' => ['required', 'numeric', 'min:0'],
+            'date_debut' => ['required', 'date'],
+            'frequence' => ['required', 'boolean'],
+            'date_fin' => ['required_if:frequence,1', 'date', 'after_or_equal:date_debut'],
+            'duree' => ['required_if:frequence,1', 'integer', 'min:1'],
+        ]);
 
         $depense->update([
             'nom' => $request->nom ?? $depense->nom,
