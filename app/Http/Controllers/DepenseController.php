@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Depense;
+use Carbon\Carbon;
 
 class DepenseController extends Controller
 {
@@ -12,7 +13,12 @@ class DepenseController extends Controller
      */
     public function index(string $compteId)
     {
-        $depenses = depense::select('*')->where('compte_id', $compteId)->get();
+        $compte = auth()->user()->comptes()->findOrFail($compteId);
+        $depenses = Depense::select('*')->where('compte_id', $compte->id)->get();
+        foreach ($depenses as $depense) {
+            $depense->date_debut = Carbon::parse($depense->date_debut)->format('d/m/Y');
+            $depense->date_fin = Carbon::parse($depense->date_fin)->format('d/m/Y');
+        }
          return view('depenses.index', ['depenses' => $depenses, 'compteId' => $compteId]);
     }
 
@@ -21,6 +27,7 @@ class DepenseController extends Controller
      */
     public function create(string $compteId)
     {
+        auth()->user()->comptes()->findOrFail($compteId);
         return view('depenses.create', ['compteId' => $compteId]);
     }
 
@@ -29,6 +36,18 @@ class DepenseController extends Controller
      */
     public function store(Request $request, string $compteId)
     {
+        $compte = auth()->user()->comptes()->findOrFail($compteId);
+      
+        $request->validate([
+            'nom' => ['required', 'string', 'max:80'],
+            'description' => ['nullable', 'string'],
+            'montant' => ['required', 'numeric', 'min:0'],
+            'date_debut' => ['required', 'date'],
+            'frequence' => ['required', 'boolean'],
+            'date_fin' => ['required_if:frequence,1', 'date', 'after_or_equal:date_debut'],
+            'duree' => ['required_if:frequence,1', 'integer', 'min:1'],
+        ]);
+
         Depense::create([
             'nom' => $request->nom,
             'description' => $request->description ?? '',
@@ -37,9 +56,9 @@ class DepenseController extends Controller
             'frequence' => $request->frequence ?? false,
             'date_fin' => $request->date_fin ?? $request->date_debut,
             'duree' => $request->duree,
-            'compte_id' => $compteId,
+            'compte_id' => $compte->id,
         ]);
-        return redirect()->route('depenses.index', ['compteId' => $compteId]);
+        return redirect()->route('depenses.index', ['compteId' => $compte->id]);
     }
 
     /**
@@ -47,7 +66,13 @@ class DepenseController extends Controller
      */
     public function show(string $id)
     {
-        $depenses=Depense::findOrFail($id);
+        $depenses=Depense::whereHas('compte', function ($query) {
+            $query->where('user_id', auth()->id());
+        })->findOrFail($id);
+        $depenses->date_debut = Carbon::parse($depenses->date_debut)->format('d/m/Y');
+        if ($depenses->date_fin) {
+            $depenses->date_fin = Carbon::parse($depenses->date_fin)->format('d/m/Y');
+        }
         return view('depenses.show', ['depenses'=> $depenses]);
     }
 
@@ -56,7 +81,9 @@ class DepenseController extends Controller
      */
     public function edit(string $id)
     {
-        $depense = depense::findOrFail($id);
+        $depense = Depense::whereHas('compte', function ($query) {
+            $query->where('user_id', auth()->id());
+        })->findOrFail($id);
         return view('depenses.edit', ['depenses' => $depense]);
     }
 
@@ -65,7 +92,19 @@ class DepenseController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $depense = depense::findOrFail($id);
+        $depense = Depense::whereHas('compte', function ($query) {
+            $query->where('user_id', auth()->id());
+        })->findOrFail($id);
+
+        $request->validate([
+            'nom' => ['required', 'string', 'max:80'],
+            'description' => ['nullable', 'string'],
+            'montant' => ['required', 'numeric', 'min:0'],
+            'date_debut' => ['required', 'date'],
+            'frequence' => ['required', 'boolean'],
+            'date_fin' => ['required_if:frequence,1', 'date', 'after_or_equal:date_debut'],
+            'duree' => ['required_if:frequence,1', 'integer', 'min:1'],
+        ]);
 
         $depense->update([
             'nom' => $request->nom ?? $depense->nom,
@@ -75,7 +114,7 @@ class DepenseController extends Controller
             'frequence' => $request->frequence ?? $depense->frequence,
             'date_fin' => $request->date_fin ?? $depense->date_debut,
             'duree' => $request->duree ?? $depense->duree,
-            'compte_id' => $request->compte_id ?? $depense->compte_id,
+            'compte_id' => $depense->compte_id,
         ]);
         return redirect()->route('depenses.index', ['compteId' => $depense->compte_id]);
     }
@@ -86,9 +125,12 @@ class DepenseController extends Controller
     public function destroy(string $id)
     {
         
-        $delete = Depense::findOrFail($id);
-        $delete->deleteOrFail($id);
+        $delete = Depense::whereHas('compte', function ($query) {
+            $query->where('user_id', auth()->id());
+        })->findOrFail($id);
+        $compteId = $delete->compte_id;
+        $delete->deleteOrFail();
 
-        return redirect()->route('depenses.index', ['compteId' => $delete->compte_id]);
+        return redirect()->route('depenses.index', ['compteId' => $compteId]);
     }
 }

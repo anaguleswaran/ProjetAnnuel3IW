@@ -9,7 +9,7 @@ use Carbon\Carbon;
 class CompteController extends Controller
 {
     public function index() {
-        $comptes = Compte::all();
+        $comptes = auth()->user()->comptes()->get();
         foreach ($comptes as $compte) {
             $compte->solde = $this->calculSolde($compte->id);
         }
@@ -17,18 +17,28 @@ class CompteController extends Controller
     }
 
     public function show($id, Request $request) {
-        $compte=Compte::findOrFail($id);
+        // $compte=Compte::findOrFail($id);
+        $compte = auth()->user()->comptes()->findOrFail($id);
+
         $dateReference=$request->date_reference;
 
         $solde=$this->calculSolde($id);
         $soldeDate=null;
         if ($dateReference) {
             $soldeDate = $this->calculSolde($id, $dateReference);
+            $dateReference = carbon::parse($dateReference)->format('d/m/Y');
         }
         return view('comptes/compte', ['compte'=> $compte, 'solde' => $solde, 'soldeDate' => $soldeDate, 'dateReference' => $dateReference]);
     }
 
     public function addCompte(Request $request) {
+        $request->validate([
+            'nom' => ['required', 'string', 'max:80'],
+            'description' => ['nullable', 'string'],
+            'taux_remuneration' => ['nullable', 'numeric', 'min:0', 'max:100'],
+            'taux_imposition' => ['nullable', 'numeric', 'min:0', 'max:100'],
+        ]);
+
         Compte::create([
             'nom' => $request->nom,
             'description' => $request->description ?? '',
@@ -45,7 +55,16 @@ class CompteController extends Controller
 
     public function update(Request $request, $id) {
 
-        $compte = Compte::findOrFail($id);
+        // $compte = Compte::findOrFail($id);
+        $compte = auth()->user()->comptes()->findOrFail($id);
+
+
+        $request->validate([
+            'nom' => ['required', 'string', 'max:80'],
+            'description' => ['nullable', 'string'],
+            'taux_remuneration' => ['nullable', 'numeric', 'min:0', 'max:100'],
+            'taux_imposition' => ['nullable', 'numeric', 'min:0', 'max:100'],
+        ]);
 
         $compte->update([
             'nom' => $request->nom ?? $compte->nom,
@@ -58,12 +77,16 @@ class CompteController extends Controller
     }
 
     public function edit($id) {
-        $compte = Compte::findOrFail($id);
+        // $compte = Compte::findOrFail($id);
+        $compte = auth()->user()->comptes()->findOrFail($id);
+
         return view('/comptes/update', ['compte' => $compte]);
     }
 
     public function destroy($id) {
-        $delete = Compte::findOrFail($id);
+        // $delete = Compte::findOrFail($id);
+        $delete = auth()->user()->comptes()->findOrFail($id);
+
         $delete->deleteOrFail();
 
         return redirect('/comptes');

@@ -16,54 +16,62 @@
 
                         <div>
                             <label for="nom">Nom</label>
-                            <input type="text" id="nom" name="nom" value="{{$depenses->nom}}" class="w-full rounded text-black"  style="color:black" required>
+                            <input type="text" id="nom" name="nom" value="{{old('nom', $depenses->nom)}}" class="w-full rounded-xl border-gray-300 p-3 text-black"  style="color:black" required>
                         </div>
 
                         <div>
                             <label for="description">Description</label>
-                            <textarea id="description" name="description" class="w-full rounded text-black"  style="color:black">{{ $depenses->description }}</textarea>
+                            <textarea id="description" name="description" class="w-full rounded-xl border-gray-300 p-3 text-black"  style="color:black">{{ old('description', $depenses->description) }}</textarea>
                         </div>
 
                         <div>
                             <label for="montant">Montant (€)</label>
-                            <input type="number" step="1" id="montant" name="montant" value="{{$depenses->montant}}" class="w-full rounded text-black"  style="color:black" required>
+                            <input type="number" step="1" id="montant" name="montant" value="{{old('montant', $depenses->montant)}}" class="w-full rounded-xl border-gray-300 p-3 text-black"  style="color:black" required>
                         </div>
 
 
                         <div>
                             <label class="block mb-2">Type de depense</label>
                             <label class="mr-6">
-                                <input type="radio" name="frequence" value="1" {{ $depenses->frequence == 0 ? 'checked' : '' }}>
+                                <input type="radio" name="frequence" value="0" {{ old('frequence', $depenses->frequence) == 0 ? 'checked' : '' }}>
                                 Ponctuel
                             </label>
 
                             <label>
-                                <input type="radio" name="frequence" value="0" {{ $depenses->frequence == 1 ? 'checked' : '' }}>
+                                <input type="radio" name="frequence" value="1" {{ old('frequence', $depenses->frequence) == 1 ? 'checked' : '' }}>
                                 Récurrent
                             </label>
                         </div>
 
                         <div>
                             <label for="date_debut">Date de début</label>
-                            <input type="date" id="date_debut" name="date_debut" value="{{$depenses->date_debut}}" class="w-full rounded text-black"  style="color:black">
+                            <input type="date" id="date_debut" name="date_debut" value="{{old('date_debut', $depenses->date_debut)}}" class="w-full rounded-xl border-gray-300 p-3 text-black"  style="color:black">
                         </div>
 
                     
                         <div id="recurrent-fields" class="hidden space-y-4">
                             <div>
                                 <label for="date_fin">Date de fin</label>
-                                <input type="date" id="date_fin" name="date_fin" value="{{$depenses->date_fin}}" class="w-full rounded text-black"  style="color:black">
+                                <input type="date" id="date_fin" name="date_fin" value="{{old('date_fin', $depenses->date_fin)}}" class="w-full rounded-xl border-gray-300 p-3 text-black"  style="color:black">
                             </div>
 
                             <div>
                                 <label for="duree">Durée</label>
-                                <input type="number" id="duree" name="duree" value="{{$depenses->duree}}" class="w-full rounded text-black"  style="color:black">
+                                <input type="number" id="duree" name="duree" value="{{old('duree', $depenses->duree)}}" class="w-full rounded-xl border-gray-300 p-3 text-black"  style="color:black">
                             </div>
 
                         </div>
                           
-                                
-                                    <button type="submit">Modifier mon depense</button>
+                                <div style="display: flex; justify-content:space-between; margin-top: 20px;">      
+                                    <button type="submit"
+                                    style="background:#2563eb; color:white; padding:10px 20px; border-radius:12px; font-weight:600; text-decoration:none;">
+                                        Modifier la dépense
+                                    </button>
+                                    <a href="{{ route('depenses.show', $depenses->id) }}"
+                                    style="border:2px solid #374151; color:#374151; padding:10px 20px; border-radius:12px; font-weight:600; text-decoration:none;">
+                                        Retour à la dépense {{$depenses->nom}}
+                                    </a>
+                                </div>
                                 </form>
 
                     </div>
@@ -76,9 +84,9 @@
                             const value = document.querySelector('input[name="frequence"]:checked').value;
 
                             if (value === "0") {
-                                recurrentFields.classList.remove('hidden');
-                            } else {
                                 recurrentFields.classList.add('hidden');
+                            } else {
+                                recurrentFields.classList.remove('hidden');
                             }
                         }
 

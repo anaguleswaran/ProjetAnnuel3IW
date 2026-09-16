@@ -25,38 +25,24 @@
                                                 {{ $compte->description }}
                                             </p>
                                         @endif
-                                        <p>Solde : {{$compte->solde}}</p>
+                                        <p>Solde : {{$compte->solde}} €</p>
                                         
                                         <form action='comptes/{{$compte->id}}' method="POST">
                                             @csrf
                                             @method('DELETE')
 
-                                            <button type="submit" onclick="return confirm('Voulez-cous supprimez ce compte ?')">
-                                                Supprimer
+                                            <button type="submit" onclick="return confirm('Voulez-cous supprimez ce compte ?')"
+                                            style="border: 2px solid #dc2626; color: #dc2626; border-radius: 12px; padding: 6px 10px; cursor: pointer; margin-top: 10px; margin-right: 5px">
+                                                Supprimer le compte
                                             </button>
-                                        </form>
-                                        <br>
-                                        <a href="{{ route('revenus.index', $compte->id) }}" style="margin-right: 235px; margin-left:105px">
-                                            Voir les revenus
-                                        </a>
-                                        <a href="{{ route('revenus.create', $compte->id) }}" >
-                                            Ajouter un revenu
-                                        </a>
-                                        <br><br>
-                                        <a href="{{ route('depenses.index', $compte->id) }}" style="margin-right: 220px; margin-left:100px">
-                                            Voir les dépenses
-                                        </a>
-                                        <a href="{{ route('depenses.create', $compte->id) }}" >
-                                            Ajouter une dépense
-                                        </a>
+                                        </form>                                        
                                     </div>
                                 </a>
                             </div>
+                            <br>
                         @endforeach 
                     </div>
-                    <br>
-                    <br>
-                    <a href="/comptes/create">Ajouter un compte</a>
+                    <a href="/comptes/create" style="background:#2563eb; color:white; padding:10px 20px; border-radius:12px; margin-top: 30px">+ Ajouter un compte</a>
                 
                 </div>
             </div>
