@@ -4,6 +4,7 @@ RUN apt-get update && apt-get install -y \
     git \
     unzip \
     libzip-dev \
+    libxml2-dev \
     nodejs \
     npm
 
