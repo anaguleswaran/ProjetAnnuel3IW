@@ -140,8 +140,9 @@ class CompteController extends Controller
         $total = 0;
         $dateCalcul = $dateReference ?? today();
 
-        $elements = $elements->whereDate('date_debut', '<=', $dateCalcul)
-            ->get();
+        // $elements = $elements->whereDate('date_debut', '<=', $dateCalcul)
+        //     ->get();
+        $elements = $elements->get();
 
         foreach ($elements as $element) {
 
