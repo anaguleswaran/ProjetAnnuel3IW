@@ -18,11 +18,12 @@ class CompteController extends Controller
     }
 
     public function show($id, Request $request) {
-        $compte=Compte::findOrFail($id);
-        $dateReference=$request->date_reference;
+        $compte = auth()->user()->comptes()->findOrFail($id);
 
-        $solde=$this->calculSolde($id);
-        $soldeDate=null;
+        $dateReference = $request->date_reference;
+
+        $solde = $this->calculSolde($id);
+        $soldeDate = null;
         if ($dateReference) {
             $soldeDate = $this->calculSolde($id, $dateReference);
             $dateReference = carbon::parse($dateReference)->format('d/m/Y');
@@ -31,6 +32,13 @@ class CompteController extends Controller
     }
 
     public function addCompte(Request $request) {
+        $request->validate([
+            'nom' => ['required', 'string', 'max:80'],
+            'description' => ['nullable', 'string'],
+            'taux_remuneration' => ['nullable', 'numeric', 'min:0', 'max:100'],
+            'taux_imposition' => ['nullable', 'numeric', 'min:0', 'max:100'],
+        ]);
+
         Compte::create([
             'nom' => $request->nom,
             'description' => $request->description ?? '',
@@ -47,31 +55,69 @@ class CompteController extends Controller
 
     public function update(Request $request, $id) {
 
-        $compte = Compte::findOrFail($id);
+        $compte = auth()->user()->comptes()->findOrFail($id);
+
+        $request->validate([
+            'nom' => ['required', 'string', 'max:80'],
+            'description' => ['nullable', 'string'],
+            'taux_remuneration' => ['nullable', 'numeric', 'min:0', 'max:100'],
+            'taux_imposition' => ['nullable', 'numeric', 'min:0', 'max:100'],
+        ]);
 
         $compte->update([
             'nom' => $request->nom ?? $compte->nom,
             'description' => $request->description ?? $compte->description,
             'taux_remuneration' => $request->taux_remuneration ?? $compte->taux_remuneration,
-            'taux_imposition' => $request->taux_imposition ??$compte->taux_imposition,
+            'taux_imposition' => $request->taux_imposition ?? $compte->taux_imposition,
             'user_id' => auth()->id(),
         ]);
         return redirect('/comptes');
     }
 
     public function edit($id) {
-        $compte = Compte::findOrFail($id);
+        $compte = auth()->user()->comptes()->findOrFail($id);
+
         return view('/comptes/update', ['compte' => $compte]);
     }
 
     public function destroy($id) {
-        $delete = Compte::findOrFail($id);
+        $delete = auth()->user()->comptes()->findOrFail($id);
+
         $delete->deleteOrFail();
 
         return redirect('/comptes');
     }
 
-    public function calculTotal ($elements, $dateReference = null) {
+    public function trouverException($element, $dateCalcul) {
+        $exceptions = $element->exceptions()
+            ->whereDate('date_debut', '<=', $dateCalcul)
+            ->where(function ($query) use ($dateCalcul) {
+                $query->whereNull('date_fin')
+                    ->orWhereDate('date_fin', '>=', $dateCalcul);
+            })
+            ->get();
+
+        foreach ($exceptions as $exception) {
+
+            if (!$exception->frequence) {
+                if ($dateCalcul->isSameMonth(Carbon::parse($exception->date_debut))) {
+                    return $exception;
+                }
+                continue;
+            }
+
+            $dateDebutException = Carbon::parse($exception->date_debut);
+            $nbMoisException = $dateDebutException->diffInMonths($dateCalcul);
+
+            if ($nbMoisException % $exception->duree === 0) {
+                return $exception;
+            }
+        }
+
+        return null;
+    }
+
+    public function calculTotal ($elements, $dateReference = null, $mode = 'cumul') {
 
         $total = 0;
         $dateCalcul = $dateReference ?? today();
@@ -83,18 +129,42 @@ class CompteController extends Controller
 
             // Element ponctuel
             if (!$element->frequence) {
-                $total += $element->montant;
+
+                if ($mode === 'mois') {
+                    if ($dateCalcul->isSameMonth(Carbon::parse($element->date_debut))) {
+
+                        $exception = $this->trouverException($element, $dateCalcul);
+
+                        $total += $exception ? $exception->montant : $element->montant;
+                    }
+                } else {
+                    $total += $element->montant;
+                }
                 continue;
             }
 
             $dateDebut = Carbon::parse($element->date_debut);
-            $dateFin = Carbon::parse($element->date_fin);
+            $dateFin = $element->date_fin ? Carbon::parse($element->date_fin) : null;
 
-            $limite = $dateFin->min($dateCalcul);
+            if ($dateFin && $dateCalcul->gt($dateFin)) {
+                continue;
+            }
 
-            $nbMois = $dateDebut->diffInMonths($limite);
+            if ($mode === 'mois') {
+                $nbMois = $dateDebut->diffInMonths($dateCalcul);
 
-            $total += (intdiv($nbMois, $element->duree) + 1) * $element->montant;
+                if ($nbMois % $element->duree === 0) {
+
+                    $exception = $this->trouverException($element, $dateCalcul);
+
+                    $total += $exception ? $exception->montant : $element->montant;
+                }
+
+            } else {
+                $limite = $dateFin ? $dateFin->min($dateCalcul) : $dateCalcul;
+                $nbMois = $dateDebut->diffInMonths($limite);
+                $total += (intdiv($nbMois, $element->duree) + 1) * $element->montant;
+            }
         }
 
         return $total;
@@ -102,12 +172,44 @@ class CompteController extends Controller
 
     public function calculSolde($id, $dateReference = null) {
         $compte = Compte::findOrFail($id);
-        $revenuTotal = $this->calculTotal($compte->revenus(), $dateReference);
-        $depenseTotal = $this->calculTotal($compte->depenses(), $dateReference);
 
-        $solde = ($revenuTotal - $depenseTotal) * (1+($compte->taux_remuneration/100)) * (1-($compte->taux_imposition/100));
-        
-        return round($solde,2);
+        $premiereDateRevenu = $compte->revenus()->min('date_debut');
+        $premiereDateDepense = $compte->depenses()->min('date_debut');
+
+        $dates = array_filter([
+            $premiereDateRevenu ? Carbon::parse($premiereDateRevenu)->startOfMonth() : null,
+            $premiereDateDepense ? Carbon::parse($premiereDateDepense)->startOfMonth() : null,
+        ]);
+
+        if (empty($dates)) {
+            return 0;
+        }
+
+        $dateDebut = min($dates);
+
+        $dateFin = $dateReference ? Carbon::parse($dateReference)->endOfMonth() : today()->endOfMonth();
+
+        $tauxMensuel = ($compte->taux_remuneration / 100) / 12;
+        $tauxImposition = ($compte->taux_imposition / 100);
+
+        $solde = 0;
+
+        while ($dateDebut <= $dateFin) {
+            $revenus = $this->calculTotal($compte->revenus(), $dateDebut, 'mois');
+            $depenses = $this->calculTotal($compte->depenses(), $dateDebut, 'mois');
+
+            $solde += $revenus - $depenses;
+
+            if ($solde > 0 && $compte->taux_remuneration > 0) {
+                $interets = $solde * $tauxMensuel;
+                $impots = $interets * $tauxImposition;
+                $solde += $interets - $impots;
+            }
+
+            $dateDebut->addMonth();
+        }
+
+        return round($solde, 2);
     }
 
 }

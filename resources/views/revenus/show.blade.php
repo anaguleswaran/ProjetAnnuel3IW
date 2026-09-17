@@ -58,7 +58,98 @@
                                             Retour au compte
                                         </a>
                                     </div>
+                                    {{-- Exceptions --}}
+
+                                    <div style="border-top:2px solid #d1d5db; margin-top:25px; padding-top:20px;">
+
+                                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+
+                                            <h3 class="font-semibold text-lg">Exceptions</h3>
+
+                                            <a href="{{ route('exceptions.revenu.create', $revenus->id) }}"
+                                                style="background:#16a34a; color:white; padding:10px 20px; border-radius:12px; font-weight:600; text-decoration:none;">
+                                                + Ajouter une exception
+                                            </a>
+
+                                        </div>
+
+                                        @if ($exceptions->isEmpty())
+                                            <p>Aucune exception pour ce revenu.</p>
+                                        @else
+                                            @foreach ($exceptions as $exception)
+
+                                                <div class="bg-white dark:bg-gray-800 p-4 rounded mb-3" style="margin-bottom: 20px;">
+                                                    <p>
+                                                        <strong>Nom : </strong>
+                                                        {{ $exception->nom }}
+                                                    </p>
+                                                    <p>
+                                                        <strong>Montant : </strong>
+                                                        {{ $exception->montant }} €
+                                                    </p>
+                                                    <p>
+                                                        <strong>Date de début : </strong>
+                                                        {{ $exception->date_debut }}
+                                                    </p>
+
+                                                    @if ($exception->frequence)
+                                                        <p>
+                                                            <strong>Fréquence : </strong>
+                                                            Tous les {{ $exception->duree }} mois
+                                                        </p>
+
+                                                        @if ($exception->date_fin)
+                                                            <p>
+                                                                <strong>Date de fin : </strong>
+                                                                {{ $exception->date_fin }}
+                                                            </p>
+                                                        @endif
+
+                                                    @else
+                                                        <p>
+                                                            <strong>Fréquence : </strong>
+                                                            Ponctuel
+                                                        </p>
+                                                    @endif
+
+                                                    <div style="margin-top:10px; display:flex; justify-content:space-between;">
+
+                                                        <a href="{{ route('exceptions.show', $exception->id) }}"
+                                                            style="background:#2563eb; color:white; padding:6px 12px; border-radius:10px; font-weight:600; text-decoration:none;">
+                                                            Voir l'exception
+                                                        </a>
+
+                                                        <form method="POST" action="{{ route('exceptions.destroy', $exception->id) }}" style="display:inline;">
+                                                            @csrf
+                                                            @method('DELETE')
+
+                                                            <button type="submit"
+                                                                style="border:2px solid #dc2626; color:#dc2626; padding:6px 12px; border-radius:10px; font-weight:600; cursor:pointer; margin-left:8px;">
+                                                                Supprimer
+                                                            </button>
+                                                        </form>
+
+                                                    </div>
+
+                                                </div>
+
+                                            @endforeach
+
+                                        @endif
+
+                                    </div>
+                                    
                                 </div>
+                                
+                                <form method="POST" action="{{ route('revenus.destroy', $revenus->id) }}">
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button type="submit"
+                                        style="border:2px solid #dc2626; color:#dc2626; padding:8px 14px; border-radius:10px; font-weight:600; cursor:pointer; margin-top:10px;">
+                                        Supprimer le revenu
+                                    </button>
+                                </form>
                             </div>
                         </div>
 

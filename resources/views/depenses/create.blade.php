@@ -15,46 +15,46 @@
 
                         <div>
                             <label for="nom">Nom</label>
-                            <input type="text" id="nom" name="nom" class="w-full rounded-xl border-gray-300 p-3 text-black"  style="color:black" required>
+                            <input type="text" id="nom" name="nom" value="{{ old('nom') }}" class="w-full rounded-xl border-gray-300 p-3 text-black"  style="color:black" required>
                         </div>
 
                         <div>
                             <label for="description">Description</label>
-                            <textarea id="description" name="description" class="w-full rounded-xl border-gray-300 p-3 text-black"  style="color:black"></textarea>
+                            <textarea id="description" name="description" class="w-full rounded-xl border-gray-300 p-3 text-black"  style="color:black">{{ old('description') }}</textarea>
                         </div>
 
                         <div>
                             <label for="montant">Montant (€)</label>
-                            <input type="number" step="1" id="montant" name="montant" class="w-full rounded-xl border-gray-300 p-3 text-black"  style="color:black" required>
+                            <input type="number" step="1" id="montant" name="montant" value="{{ old('montant') }}" class="w-full rounded-xl border-gray-300 p-3 text-black"  style="color:black" required>
                         </div>
 
 
                         <div>
                             <label class="block mb-2">Type de depense</label>
                             <label class="mr-6">
-                                <input type="radio" name="frequence" value="0" checked>Ponctuel
+                                <input type="radio" name="frequence" value="0" {{ old('frequence', '0') == '0' ? 'checked' : '' }}>Ponctuel
                             </label>
 
                             <label>
-                                <input type="radio" name="frequence" value="1"> Récurrent
+                                <input type="radio" name="frequence" value="1" {{ old('frequence', '0') == '1' ? 'checked' : '' }}> Récurrent
                             </label>
                         </div>
 
                         <div>
                             <label for="date_debut">Date de début</label>
-                            <input type="date" id="date_debut" name="date_debut" class="w-full rounded-xl border-gray-300 p-3 text-black"  style="color:black">
+                            <input type="date" id="date_debut" name="date_debut" value="{{ old('date_debut') }}" class="w-full rounded-xl border-gray-300 p-3 text-black"  style="color:black">
                         </div>
 
                     
                         <div id="recurrent-fields" class="hidden space-y-4">
                             <div>
                                 <label for="date_fin">Date de fin</label>
-                                <input type="date" id="date_fin" name="date_fin" class="w-full rounded-xl border-gray-300 p-3 text-black"  style="color:black">
+                                <input type="date" id="date_fin" name="date_fin" value="{{ old('date_fin') }}" class="w-full rounded-xl border-gray-300 p-3 text-black"  style="color:black">
                             </div>
 
                             <div>
                                 <label for="duree">Durée</label>
-                                <input type="number" id="duree" name="duree" class="w-full rounded-xl border-gray-300 p-3 text-black"  style="color:black">
+                                <input type="number" id="duree" name="duree" value="{{ old('duree') }}" class="w-full rounded-xl border-gray-300 p-3 text-black"  style="color:black">
                             </div>
 
                         </div>
@@ -92,6 +92,15 @@
                         toggleFields();
                     </script>
                 </div>
+                @if ($errors->any())
+                    <div style="color: red; margin-bottom: 20px;">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
