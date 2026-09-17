@@ -28,7 +28,13 @@ class RevenuController extends Controller
         if ($revenus->date_fin) {
             $revenus->date_fin = Carbon::parse($revenus->date_fin)->format('d/m/Y');
         }
-        return view('revenus.show', ['revenus'=> $revenus]);
+        $exceptions = $revenus->exceptions()->get();
+
+        return view('revenus.show', [
+            'revenus' => $revenus,
+            'exceptions' => $exceptions
+        ]);
+
     }
 
     public function store(Request $request, string $compteId) {

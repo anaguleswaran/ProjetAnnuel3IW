@@ -107,7 +107,17 @@ class CompteController extends Controller
 
                 if ($mode === 'mois') {
                     if ($dateCalcul->isSameMonth(Carbon::parse($element->date_debut))) {
-                        $total += $element->montant;
+
+                        // Cherche une exception pour ce mois
+                        $exception = $element->exceptions()
+                            ->whereDate('date_debut', '<=', $dateCalcul)
+                            ->where(function ($query) use ($dateCalcul) {
+                                $query->whereNull('date_fin')
+                                    ->orWhereDate('date_fin', '>=', $dateCalcul);
+                            })
+                            ->first();
+
+                        $total += $exception ? $exception->montant : $element->montant;
                     }
                 } else {
                     $total += $element->montant;
@@ -123,8 +133,19 @@ class CompteController extends Controller
 
             if ($mode === 'mois') {
                 if ($nbMois % $element->duree === 0) {
-                    $total += $element->montant;
-                } 
+
+                    // Cherche une exception pour ce mois
+                    $exception = $element->exceptions()
+                        ->whereDate('date_debut', '<=', $dateCalcul)
+                        ->where(function ($query) use ($dateCalcul) {
+                            $query->whereNull('date_fin')
+                                ->orWhereDate('date_fin', '>=', $dateCalcul);
+                        })
+                        ->first();
+
+                    $total += $exception ? $exception->montant : $element->montant;
+                }
+
             } else {
                 $total += (intdiv($nbMois, $element->duree) + 1) * $element->montant;
             }

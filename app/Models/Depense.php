@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Compte;
+use App\Models\Exception;
 
 class Depense extends Model
 {
@@ -25,4 +26,10 @@ class Depense extends Model
     public function compte() {
         return $this->belongsTo(Compte::class);
     }
+
+    public function exceptions()
+    {
+        return $this->hasMany(Exception::class);
+    }
+
 }
