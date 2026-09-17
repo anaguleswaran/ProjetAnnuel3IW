@@ -73,7 +73,13 @@ class DepenseController extends Controller
         if ($depenses->date_fin) {
             $depenses->date_fin = Carbon::parse($depenses->date_fin)->format('d/m/Y');
         }
-        return view('depenses.show', ['depenses'=> $depenses]);
+        $exceptions = $depenses->exceptions()->get();
+
+        return view('depenses.show', [
+            'depenses' => $depenses,
+            'exceptions' => $exceptions
+        ]);
+
     }
 
     /**

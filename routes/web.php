@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CompteController;
 use App\Http\Controllers\RevenuController;
 use App\Http\Controllers\DepenseController;
+use App\Http\Controllers\ExceptionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -42,6 +43,22 @@ Route::middleware('auth')->group(function () {
     Route::get('/compte/depenses/update/{id}', [DepenseController::class, 'edit'])->name('depenses.edit');
     Route::put('/compte/depenses/{id}', [DepenseController::class, 'update'])->name('depenses.update');
     Route::delete('/compte/depenses/{id}', [DepenseController::class, 'destroy'])->name('depenses.destroy');
-});
+
+    
+    // Exceptions liées aux dépenses
+    Route::get('/compte/depenses/{depenseId}/exceptions', [ExceptionController::class, 'indexDepense'])->name('exceptions.depense.index');
+    Route::get('/compte/depenses/{depenseId}/exceptions/create', [ExceptionController::class, 'createDepense'])->name('exceptions.depense.create');
+    Route::post('/compte/depenses/{depenseId}/exceptions', [ExceptionController::class, 'storeDepense'])->name('exceptions.depense.store');
+    // Exceptions liées aux revenus
+    Route::get('/compte/revenus/{revenuId}/exceptions', [ExceptionController::class, 'indexRevenu'])->name('exceptions.revenu.index');
+    Route::get('/compte/revenus/{revenuId}/exceptions/create', [ExceptionController::class, 'createRevenu'])->name('exceptions.revenu.create');
+    Route::post('/compte/revenus/{revenuId}/exceptions', [ExceptionController::class, 'storeRevenu'])->name('exceptions.revenu.store');
+    // Exceptions
+    Route::get('/compte/exceptions/{id}', [ExceptionController::class, 'show'])->name('exceptions.show');
+    Route::get('/compte/exceptions/{id}/edit', [ExceptionController::class, 'edit'])->name('exceptions.edit');
+    Route::put('/compte/exceptions/{id}', [ExceptionController::class, 'update'])->name('exceptions.update');
+    Route::delete('/compte/exceptions/{id}', [ExceptionController::class, 'destroy'])->name('exceptions.destroy');
+
+    });
 
 require __DIR__.'/auth.php';
