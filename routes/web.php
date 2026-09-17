@@ -6,6 +6,7 @@ use App\Http\Controllers\CompteController;
 use App\Http\Controllers\RevenuController;
 use App\Http\Controllers\DepenseController;
 use App\Http\Controllers\ExceptionController;
+use App\Http\Controllers\PartageController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -58,6 +59,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/compte/exceptions/{id}/edit', [ExceptionController::class, 'edit'])->name('exceptions.edit');
     Route::put('/compte/exceptions/{id}', [ExceptionController::class, 'update'])->name('exceptions.update');
     Route::delete('/compte/exceptions/{id}', [ExceptionController::class, 'destroy'])->name('exceptions.destroy');
+
+    Route::get('/comptes/{compteId}/partages', [PartageController::class, 'index'])->name('partages.index');
+    Route::get('/comptes/{compteId}/partages/create', [PartageController::class, 'create'])->name('partages.create');
+    Route::post('/comptes/{compteId}/partages', [PartageController::class, 'store'])->name('partages.store');
+    Route::get('/partages/accept/{token}', [PartageController::class, 'accept'])->name('partages.accept');
+    Route::delete('/partages/{id}', [PartageController::class, 'destroy'])->name('partages.destroy');
 
     });
 

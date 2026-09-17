@@ -14,7 +14,7 @@
                         <p>Aucune revenu.</p>
                     @else
                         @foreach ($revenus as $revenu)
-                                <div class="grid grid-cols-3 gap-4" mb-4>                                    
+                                <div class="grid gap-4" mb-4>                                    
                                     <a href="{{ route('revenus.show', $revenu->id) }}">
                                     <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded">
                                         <p><strong>Nom : </strong>
@@ -33,15 +33,16 @@
                                             Tout les {{ $revenu->duree }} mois</p>
                                         @endif  
                         
-                                            
-                                        <form method="POST" action="{{ route('revenus.destroy', $revenu->id) }}" style="margin-top: 10px;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" 
-                                                style="border: 2px solid #dc2626; color: #dc2626; border-radius: 12px; padding: 6px 10px; cursor: pointer; margin-top: 10px; margin-right: 5px">
-                                                Supprimer ce revenu
-                                            </button>
-                                        </form>
+                                        @if(!$lectureSeule)
+                                            <form method="POST" action="{{ route('revenus.destroy', $revenu->id) }}" style="margin-top: 10px;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" 
+                                                    style="border: 2px solid #dc2626; color: #dc2626; border-radius: 12px; padding: 6px 10px; cursor: pointer; margin-top: 10px; margin-right: 5px">
+                                                    Supprimer ce revenu
+                                                </button>
+                                            </form>
+                                        @endif
                                     </div>
                                     </a>
                                 </div>
@@ -49,9 +50,11 @@
                         @endforeach
                     @endif
                     <div style="display: flex; justify-content: space-between; margin-top: 40px;">
-                        <a href="{{ route('revenus.create', $compteId) }}" style="background:#2563eb; color:white; padding:10px 20px; border-radius:12px;">
-                            + Ajouter un revenu
-                        </a> 
+                        @if(!$lectureSeule)
+                            <a href="{{ route('revenus.create', $compteId) }}" style="background:#2563eb; color:white; padding:10px 20px; border-radius:12px;">
+                                + Ajouter un revenu
+                            </a> 
+                        @endif
                         <a href="{{ route('comptes.show', $compteId) }}" style="border:2px solid #374151; color:#374151; padding:10px 20px; border-radius:12px; font-weight:600 text-decoration:none;">
                             Retour au compte
                         </a>

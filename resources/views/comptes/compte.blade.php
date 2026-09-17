@@ -10,7 +10,7 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
 
-                        <div class="grid grid-cols-3zz gap-4">
+                        <div class="grid gap-4">
                             
                             <h1 class="text-xl font-bold mb-2"><strong>{{$compte->nom}}</strong></h1>
 
@@ -65,29 +65,42 @@
                                         <a href="{{ route('revenus.index', $compte->id) }}" style=" border:2px solid #166534; color:#166534; border-radius:12px; padding:10px 20px; font-weight:600; text-decoration:none;">
                                             Voir les revenus
                                         </a>
-                                        <a href="{{ route('revenus.create', $compte->id) }}" style="color:#166534; font-weight:700; text-decoration:none;">
-                                            + Ajouter un revenu
-                                        </a>
+                                        @if(!$lectureSeule)
+                                            <a href="{{ route('revenus.create', $compte->id) }}" style="color:#166534; font-weight:700; text-decoration:none;">
+                                                + Ajouter un revenu
+                                            </a>
+                                        @endif
                                     </div>
                                     <div style="display:flex; justify-content:space-between; align-items:center; padding:6px; margin-top:8px;">
-                                            <a href="{{ route('depenses.index', $compte->id) }}" style=" border:2px solid #166534; color:#166534; border-radius:12px; padding:10px 20px; font-weight:600; text-decoration:none;">
-                                                Voir les dépenses
-                                            </a>
+                                        <a href="{{ route('depenses.index', $compte->id) }}" style=" border:2px solid #166534; color:#166534; border-radius:12px; padding:10px 20px; font-weight:600; text-decoration:none;">
+                                            Voir les dépenses
+                                        </a>
+                                        @if(!$lectureSeule)
                                             <a href="{{ route('depenses.create', $compte->id) }}" style="color:#166534; font-weight:700; text-decoration:none;">
-                                            + Ajouter une dépense
+                                                + Ajouter une dépense
                                             </a>
+                                        @endif
                                     </div>
-                                    <div style="display:flex; justify-content: space-between; margin-top: 40px;">
-                                        <a href="/comptes/update/{{ $compte->id }}" style="background:#2563eb; color:white; padding:10px 20px; border-radius:12px; font-weight:600; text-decoration:none;">Modifier le compte</a><br>
-                                        <a href="/comptes" style="border:2px solid #374151; color:#374151; padding:10px 20px; border-radius:12px; font-weight:600; text-decoration:none;">Retour à la liste des comptes</a>
-                                    </div>
-                                </div>
-                                <form action='/comptes/{{$compte->id}}' method="POST" style="margin-top: 20px;">
-                                    @csrf
-                                    @method('DELETE')
 
-                                    <button type="submit" style="border: 2px solid #dc2626; color: #dc2626; border-radius: 12px; padding: 10px 20px; font-weight: 600; background: white; cursor: pointer;">Supprimer</button>
-                                </form>
+                                    @if($lectureSeule)
+                                        <p style="color:#b45309;font-weight:600;margin-top:10px;">Lecture seule — compte partagé</p>
+                                    @else
+                                        <div style="display:flex; justify-content: space-between; margin-top: 40px;">
+                                            <a href="/comptes/update/{{ $compte->id }}" style="background:#2563eb; color:white; padding:10px 20px; border-radius:12px; font-weight:600; text-decoration:none;">Modifier le compte</a>
+                                            <a href="/comptes" style="border:2px solid #374151; color:#374151; padding:10px 20px; border-radius:12px; font-weight:600; text-decoration:none;">Retour à la liste des comptes</a>
+                                        </div>
+                                        <div style="margin-top:15px;">
+                                            <a href="{{ route('partages.index', $compte->id) }}" style="color:#2563eb; font-weight:600; text-decoration:none;">Gérer le partage</a>
+                                        </div>
+                                    @endif
+                                </div>
+                                @if(!$lectureSeule)
+                                    <form action='/comptes/{{$compte->id}}' method="POST" style="margin-top: 20px;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" style="border: 2px solid #dc2626; color: #dc2626; border-radius: 12px; padding: 10px 20px; font-weight: 600; background: white; cursor: pointer;">Supprimer</button>
+                                    </form>
+                                @endif
                             </div>
                         </div>
 

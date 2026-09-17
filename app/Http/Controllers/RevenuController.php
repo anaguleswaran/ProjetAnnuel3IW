@@ -8,8 +8,21 @@ use Carbon\Carbon;
 
 class RevenuController extends Controller
 {
+    private function compteAccessible(string $compteId): \App\Models\Compte
+    {
+        return \App\Models\Compte::where('id', $compteId)
+            ->where(function ($query) {
+                $query->where('user_id', auth()->id())
+                    ->orWhereHas('partages', function ($q) {
+                        $q->where('user_id', auth()->id())
+                        ->where('statut', 'accepte');
+                    });
+            })->firstOrFail();
+    }
+
     public function index(string $compteId) {
-        $compte = auth()->user()->comptes()->findOrFail($compteId);
+        // $compte = auth()->user()->comptes()->findOrFail($compteId);
+        $compte = $this->compteAccessible($compteId);
         $revenus = Revenu::select('*')->where('compte_id', $compte->id)->get();
 
         foreach ($revenus as $revenu) {
@@ -17,13 +30,21 @@ class RevenuController extends Controller
             $revenu->date_fin = Carbon::parse($revenu->date_fin)->format('d/m/Y');
         }
 
-         return view('revenus.index', ['revenus' => $revenus, 'compteId' => $compteId]);
+         return view('revenus.index', ['revenus' => $revenus, 'compteId' => $compteId, 'lectureSeule' => $compte->user_id !== auth()->id()]);
     }
 
     public function show(string $id) {
-        $revenus=Revenu::whereHas('compte', function ($query) {
-            $query->where('user_id', auth()->id());
+        // $revenus=Revenu::whereHas('compte', function ($query) {
+        //     $query->where('user_id', auth()->id());
+        // })->findOrFail($id);
+        $revenus = Revenu::whereHas('compte', function ($query) {
+            $query->where('user_id', auth()->id())
+                ->orWhereHas('partages', function ($q) {
+                    $q->where('user_id', auth()->id())
+                    ->where('statut', 'accepte');
+                });
         })->findOrFail($id);
+
         $revenus->date_debut = Carbon::parse($revenus->date_debut)->format('d/m/Y');
         if ($revenus->date_fin) {
             $revenus->date_fin = Carbon::parse($revenus->date_fin)->format('d/m/Y');
@@ -32,7 +53,8 @@ class RevenuController extends Controller
 
         return view('revenus.show', [
             'revenus' => $revenus,
-            'exceptions' => $exceptions
+            'exceptions' => $exceptions,
+            'lectureSeule' => $revenus->compte->user_id !== auth()->id(),
         ]);
 
     }

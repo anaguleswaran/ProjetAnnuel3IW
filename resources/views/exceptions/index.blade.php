@@ -16,7 +16,7 @@
 
                         @foreach ($exceptions as $exception)
 
-                            <div class="grid grid-cols-3 gap-4 mb-4">
+                            <div class="grid gap-4 mb-4">
                                 <a href="{{ route('exceptions.show', $exception->id) }}">
                                     <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded">
                                         <p>

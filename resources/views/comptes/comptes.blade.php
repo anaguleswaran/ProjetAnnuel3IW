@@ -13,7 +13,7 @@
                     <div class="space-y-4">
 
                         @foreach($comptes as $compte)
-                            <div class="grid grid-cols-3 gap-4">                        
+                            <div class="grid gap-4">                        
                                 <a href="/comptes/{{$compte->id}}">
                                     <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded">
 

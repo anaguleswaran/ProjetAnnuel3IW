@@ -13,12 +13,30 @@ class CompteController extends Controller
         $comptes = auth()->user()->comptes()->get();
         foreach ($comptes as $compte) {
             $compte->solde = $this->calculSolde($compte->id);
+            $compte->lectureSeule = false;
         }
+
+        $comptesPartages = auth()->user()->comptesPartages()->get();
+        foreach ($comptesPartages as $compte) {
+            $compte->solde = $this->calculSolde($compte->id);
+            $compte->lectureSeule = true;
+        }
+        $comptes = $comptes->merge($comptesPartages);
         return view('comptes/comptes', ['comptes' => $comptes]);
     }
 
     public function show($id, Request $request) {
-        $compte = auth()->user()->comptes()->findOrFail($id);
+        // $compte = auth()->user()->comptes()->findOrFail($id);
+        $compte = Compte::where('id', $id)
+        ->where(function ($query) {
+            $query->where('user_id', auth()->id())
+                ->orWhereHas('partages', function ($q) {
+                    $q->where('user_id', auth()->id())
+                      ->where('statut', 'accepte');
+                });
+        })->firstOrFail();
+
+        $lectureSeule = $compte->user_id !== auth()->id();
 
         $dateReference = $request->date_reference;
 
@@ -28,7 +46,7 @@ class CompteController extends Controller
             $soldeDate = $this->calculSolde($id, $dateReference);
             $dateReference = carbon::parse($dateReference)->format('d/m/Y');
         }
-        return view('comptes/compte', ['compte'=> $compte, 'solde' => $solde, 'soldeDate' => $soldeDate, 'dateReference' => $dateReference]);
+        return view('comptes/compte', ['compte'=> $compte, 'solde' => $solde, 'soldeDate' => $soldeDate, 'dateReference' => $dateReference, 'lectureSeule' => $lectureSeule]);
     }
 
     public function addCompte(Request $request) {

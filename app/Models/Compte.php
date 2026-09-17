@@ -5,10 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Revenu;
 use App\Models\Depense;
 use App\Models\User;
+use App\Models\Partage;
 
 class Compte extends Model
 {
@@ -34,5 +36,16 @@ class Compte extends Model
 
     public function user() {
         return $this->belongsTo(User::class);
+    }
+
+    public function partages(): HasMany
+    {
+        return $this->hasMany(Partage::class);
+    }
+
+    public function utilisateursPartages(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'partages')
+            ->wherePivot('statut', 'accepte');
     }
 }

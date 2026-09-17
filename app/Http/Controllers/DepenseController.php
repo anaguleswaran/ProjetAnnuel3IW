@@ -24,9 +24,22 @@ class DepenseController extends Controller
     //      return view('depenses.index', ['depenses' => $depenses, 'compteId' => $compteId]);
     // }
 
+    private function compteAccessible(string $compteId): \App\Models\Compte
+    {
+        return \App\Models\Compte::where('id', $compteId)
+            ->where(function ($query) {
+                $query->where('user_id', auth()->id())
+                    ->orWhereHas('partages', function ($q) {
+                        $q->where('user_id', auth()->id())
+                        ->where('statut', 'accepte');
+                    });
+            })->firstOrFail();
+    }
+
     public function index(Request $request, string $compteId)
 {
-    $compte = auth()->user()->comptes()->findOrFail($compteId);
+    // $compte = auth()->user()->comptes()->findOrFail($compteId);
+    $compte = $this->compteAccessible($compteId);
 
     $query = Depense::where('compte_id', $compte->id);
 
@@ -45,6 +58,7 @@ class DepenseController extends Controller
         'depenses' => $depenses,
         'compteId' => $compteId,
         'recherche' => $request->recherche,
+        'lectureSeule' => $compte->user_id !== auth()->id()
     ]);
 }
 
@@ -93,9 +107,17 @@ class DepenseController extends Controller
      */
     public function show(string $id)
     {
-        $depenses=Depense::whereHas('compte', function ($query) {
-            $query->where('user_id', auth()->id());
+        // $depenses=Depense::whereHas('compte', function ($query) {
+        //     $query->where('user_id', auth()->id());
+        // })->findOrFail($id);
+        $depenses = Depense::whereHas('compte', function ($query) {
+            $query->where('user_id', auth()->id())
+                ->orWhereHas('partages', function ($q) {
+                    $q->where('user_id', auth()->id())
+                    ->where('statut', 'accepte');
+                });
         })->findOrFail($id);
+
         $depenses->date_debut = Carbon::parse($depenses->date_debut)->format('d/m/Y');
         if ($depenses->date_fin) {
             $depenses->date_fin = Carbon::parse($depenses->date_fin)->format('d/m/Y');
@@ -104,7 +126,8 @@ class DepenseController extends Controller
 
         return view('depenses.show', [
             'depenses' => $depenses,
-            'exceptions' => $exceptions
+            'exceptions' => $exceptions,
+            'lectureSeule' => $depenses->compte->user_id !== auth()->id()
         ]);
 
     }

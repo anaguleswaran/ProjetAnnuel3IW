@@ -10,7 +10,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Relations\HasmMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Models\Partage;
 use App\Models\Compte;
 
 #[Fillable(['name', 'email', 'password'])]
@@ -36,5 +37,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function comptes(): HasMany
     {
         return $this->hasMany(Compte::class);
+    }
+
+    public function comptesPartages(): BelongsToMany
+    {
+        return $this->belongsToMany(Compte::class, 'partages')
+            ->wherePivot('statut', 'accepte');
     }
 }
