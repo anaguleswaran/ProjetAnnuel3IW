@@ -11,16 +11,43 @@ class DepenseController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(string $compteId)
-    {
-        $compte = auth()->user()->comptes()->findOrFail($compteId);
-        $depenses = Depense::select('*')->where('compte_id', $compte->id)->get();
-        foreach ($depenses as $depense) {
-            $depense->date_debut = Carbon::parse($depense->date_debut)->format('d/m/Y');
-            $depense->date_fin = Carbon::parse($depense->date_fin)->format('d/m/Y');
-        }
-         return view('depenses.index', ['depenses' => $depenses, 'compteId' => $compteId]);
+    // public function index(string $compteId)
+    // {
+    //     $compte = auth()->user()->comptes()->findOrFail($compteId);
+    //     $depenses = Depense::select('*')->where('compte_id', $compte->id)
+    //         ->orderBy('created_at', 'desc')
+    //         ->get();
+    //     foreach ($depenses as $depense) {
+    //         $depense->date_debut = Carbon::parse($depense->date_debut)->format('d/m/Y');
+    //         $depense->date_fin = Carbon::parse($depense->date_fin)->format('d/m/Y');
+    //     }
+    //      return view('depenses.index', ['depenses' => $depenses, 'compteId' => $compteId]);
+    // }
+
+    public function index(Request $request, string $compteId)
+{
+    $compte = auth()->user()->comptes()->findOrFail($compteId);
+
+    $query = Depense::where('compte_id', $compte->id);
+
+    if ($request->filled('recherche')) {
+        $query->where('nom', 'like', '%' . $request->recherche . '%');
     }
+
+    $depenses = $query->get();
+
+    foreach ($depenses as $depense) {
+        $depense->date_debut = Carbon::parse($depense->date_debut)->format('d/m/Y');
+        $depense->date_fin = Carbon::parse($depense->date_fin)->format('d/m/Y');
+    }
+
+    return view('depenses.index', [
+        'depenses' => $depenses,
+        'compteId' => $compteId,
+        'recherche' => $request->recherche,
+    ]);
+}
+
 
     /**
      * Show the form for creating a new resource.
@@ -44,8 +71,8 @@ class DepenseController extends Controller
             'montant' => ['required', 'numeric', 'min:0'],
             'date_debut' => ['required', 'date'],
             'frequence' => ['required', 'boolean'],
-            'date_fin' => ['required_if:frequence,1', 'date', 'after_or_equal:date_debut'],
-            'duree' => ['required_if:frequence,1', 'integer', 'min:1'],
+            'date_fin' => ['nullable', 'required_if:frequence,1', 'date', 'after_or_equal:date_debut'],
+            'duree' => ['nullable', 'required_if:frequence,1', 'integer', 'min:1'],
         ]);
 
         Depense::create([

@@ -9,6 +9,11 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
+                    <form method="GET" action="{{ route('depenses.index', $compteId) }}">
+                        <input type="text" name="recherche" value="{{ $recherche ?? '' }}" placeholder="Rechercher une dépense...">
+                        <button type="submit">Recherche</button>
+                    </form>
+
 
                     @if($depenses->isEmpty())
                         <p>Aucune depense.</p>
